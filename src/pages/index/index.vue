@@ -225,6 +225,11 @@
       <view class="cart-count">{{ selectedCount }}</view>
     </view>
     
+    <!-- 浮动联系按钮 -->
+    <view class="floating-contact-btn" @tap="showContactOptions" :class="{ 'with-cart': selectedCount > 0 }">
+      <view class="contact-icon">💬</view>
+    </view>
+    
     <!-- 选择清单弹窗 -->
     <view class="selection-modal" v-if="showSelectedList" @tap="showSelectedList = false">
       <view class="modal-content" @tap.stop>
@@ -275,6 +280,46 @@
         </view>
       </view>
     </view>
+    
+    <!-- 联系选项弹窗 -->
+    <view class="contact-modal" v-if="showContactModal" @tap="showContactModal = false">
+      <view class="contact-modal-content" @tap.stop>
+        <view class="contact-modal-header">
+          <view class="modal-logo">
+            <image src="/static/logo.png" class="logo-img" mode="aspectFit" />
+            <text class="modal-title">联系我们</text>
+          </view>
+          <view class="close-contact-btn" @tap="showContactModal = false">
+            <text class="close-icon">✕</text>
+          </view>
+        </view>
+        
+        <view class="contact-modal-body">
+          <view class="contact-option" @tap="previewQRCode">
+            <view class="option-icon">📱</view>
+            <view class="option-info">
+              <text class="option-title">微信扫码</text>
+              <text class="option-desc">扫描二维码添加微信</text>
+            </view>
+            <view class="option-arrow">></view>
+          </view>
+          
+          <view class="contact-option" @tap="copyWechatId">
+            <view class="option-icon">📋</view>
+            <view class="option-info">
+              <text class="option-title">复制微信号</text>
+              <text class="option-desc">chaoshan_techan</text>
+            </view>
+            <view class="option-arrow">></view>
+          </view>
+          
+          <view class="qr-preview-section">
+            <image src="/static/qrcode.png" class="qr-modal-img" mode="aspectFit" @tap="previewQRCode" />
+            <text class="qr-hint">点击查看大图</text>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -284,6 +329,9 @@ import { ref, computed } from 'vue'
 // 选择清单状态
 const selectedItems = ref([])
 const showSelectedList = ref(false)
+
+// 联系功能状态
+const showContactModal = ref(false)
 
 // 计算选择的商品总数
 const selectedCount = computed(() => selectedItems.value.length)
@@ -785,6 +833,34 @@ const navigateToMenu = () => {
 const viewProduct = (product) => {
   addToSelection(product)
 }
+
+// 显示联系选项
+const showContactOptions = () => {
+  showContactModal.value = true
+}
+
+// 预览二维码
+const previewQRCode = () => {
+  uni.previewImage({
+    urls: ['/static/qrcode.png'],
+    current: '/static/qrcode.png'
+  })
+}
+
+// 复制微信号
+const copyWechatId = () => {
+  const wechatId = 'chaoshan_techan' // 这里可以替换为实际的微信号
+  uni.setClipboardData({
+    data: wechatId,
+    success: () => {
+      uni.showToast({
+        title: '微信号已复制',
+        icon: 'success'
+      })
+      showContactModal.value = false
+    }
+  })
+}
 </script>
 
 <style scoped>
@@ -822,17 +898,17 @@ const viewProduct = (product) => {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.4));
+  bottom: 80rpx;
+  background: linear-gradient(rgba(0, 0, 0, 0.1), transparent 40%, rgba(0, 0, 0, 0.6));
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   padding-left: 32rpx;
   padding-right: 32rpx;
-  padding-bottom: 80rpx;
+  padding-bottom: 120rpx;
 }
 
 /* 顶部导航条 */
@@ -1039,12 +1115,14 @@ const viewProduct = (product) => {
 
 /* 主滚动区域 */
 .main-scroll {
-  background: var(--bg-primary);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, #FFFFFF 20%);
   margin-top: -120rpx;
   border-radius: 40rpx 40rpx 0 0;
   position: relative;
   z-index: 2;
-  box-shadow: 0 -12rpx 32rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 -12rpx 48rpx rgba(0, 0, 0, 0.08);
+  min-height: calc(100vh - 120rpx);
 }
 
 
@@ -1064,28 +1142,48 @@ const viewProduct = (product) => {
 
 /* 快速导航卡片 */
 .quick-nav-section {
-  padding: 40rpx 32rpx;
+  padding: 60rpx 32rpx 40rpx;
+  background: transparent;
 }
 
 .nav-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24rpx;
+  gap: 20rpx;
 }
 
 .nav-card {
-  background: var(--bg-card);
-  border-radius: 24rpx;
-  padding: 32rpx 24rpx;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  border-radius: 28rpx;
+  padding: 40rpx 24rpx;
   text-align: center;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  border: 1rpx solid var(--border-light);
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(212, 165, 116, 0.1) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-card:active {
-  transform: translateY(-4rpx) scale(0.98);
-  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
+  transform: translateY(-8rpx) scale(0.98);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.1);
+}
+
+.nav-card:active::before {
+  opacity: 1;
 }
 
 .nav-image-container {
@@ -1120,20 +1218,34 @@ const viewProduct = (product) => {
 /* 精选推荐大卡片 */
 .featured-products-section {
   padding: 40rpx 32rpx;
+  background: transparent;
 }
 
 .section-title-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32rpx;
+  margin-bottom: 40rpx;
+  padding: 0 8rpx;
 }
 
 .section-main-title {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 800;
-  color: var(--text-primary);
+  color: #2C2C2C;
   letter-spacing: 2rpx;
+  position: relative;
+}
+
+.section-main-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8rpx;
+  left: 0;
+  width: 60rpx;
+  height: 4rpx;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  border-radius: 2rpx;
 }
 
 .title-more {
@@ -1170,17 +1282,36 @@ const viewProduct = (product) => {
 }
 
 .featured-large-card {
-  background: var(--bg-card);
-  border-radius: 28rpx;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: 32rpx;
   overflow: hidden;
-  box-shadow: 0 12rpx 36rpx rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 1rpx solid var(--border-light);
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1rpx solid rgba(255, 255, 255, 0.6);
+  position: relative;
+}
+
+.featured-large-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(212, 165, 116, 0.05) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
 }
 
 .featured-large-card:active {
-  transform: translateY(-6rpx);
-  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+  transform: translateY(-8rpx) scale(0.98);
+  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.12);
+}
+
+.featured-large-card:active::before {
+  opacity: 1;
 }
 
 .featured-card-image {
@@ -1191,6 +1322,8 @@ const viewProduct = (product) => {
 
 .featured-card-content {
   padding: 32rpx;
+  position: relative;
+  z-index: 2;
 }
 
 .card-header {
@@ -1728,6 +1861,37 @@ const viewProduct = (product) => {
   padding: 0 8rpx;
 }
 
+/* 浮动联系按钮 */
+.floating-contact-btn {
+  position: fixed;
+  right: 32rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(230, 126, 34, 0.4);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.floating-contact-btn.with-cart {
+  bottom: 260rpx;
+}
+
+.floating-contact-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(230, 126, 34, 0.6);
+}
+
+.contact-icon {
+  font-size: 36rpx;
+  color: #FFFFFF;
+}
+
 /* 选择清单弹窗 */
 .selection-modal {
   position: fixed;
@@ -1931,5 +2095,169 @@ const viewProduct = (product) => {
   font-size: 28rpx;
   color: #FFFFFF;
   font-weight: 600;
+}
+
+/* 联系弹窗 */
+.contact-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+  padding: 32rpx;
+}
+
+.contact-modal-content {
+  width: 100%;
+  max-width: 560rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.2);
+}
+
+.contact-modal-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  padding: 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.modal-logo {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.logo-img {
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12rpx;
+  padding: 4rpx;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+}
+
+.close-contact-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-contact-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
+}
+
+.close-contact-btn .close-icon {
+  font-size: 24rpx;
+  color: white;
+}
+
+.contact-modal-body {
+  padding: 32rpx;
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  transition: all 0.3s ease;
+}
+
+.contact-option:last-of-type {
+  border-bottom: none;
+  margin-bottom: 24rpx;
+}
+
+.contact-option:active {
+  background: #F8F9FA;
+  margin: 0 -16rpx;
+  padding-left: 16rpx;
+  padding-right: 16rpx;
+  border-radius: 12rpx;
+}
+
+.option-icon {
+  width: 64rpx;
+  height: 64rpx;
+  background: var(--primary-color);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  font-size: 28rpx;
+  color: white;
+}
+
+.option-info {
+  flex: 1;
+}
+
+.option-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4rpx;
+  display: block;
+}
+
+.option-desc {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.option-arrow {
+  font-size: 24rpx;
+  color: #CCC;
+  margin-left: 16rpx;
+}
+
+.qr-preview-section {
+  text-align: center;
+  padding: 24rpx;
+  background: #F8F9FA;
+  border-radius: 16rpx;
+}
+
+.qr-modal-img {
+  width: 200rpx;
+  height: 200rpx;
+  background: white;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.qr-modal-img:active {
+  transform: scale(0.95);
+}
+
+.qr-hint {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
 }
 </style>

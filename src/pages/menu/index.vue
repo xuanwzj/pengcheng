@@ -10,9 +10,9 @@
       <!-- 门店信息栏 -->
       <view class="store-info">
         <view class="store-left">
-          <text class="service-type">到店取</text>
+          <text class="service-type">南门蓬城老店</text>
           <text class="divider">|</text>
-          <text class="delivery-type">喜外送</text>
+          <text class="service-type">到店取</text>
         </view>
         <view class="store-right">
           <view class="search-btn" @tap="showSearchModal">
@@ -45,7 +45,6 @@
             @tap="selectCategory(index)"
           >
             <text class="category-name">{{ category.name }}</text>
-            <view class="category-indicator" v-if="activeCategory === index"></view>
           </view>
         </scroll-view>
       </view>
@@ -511,16 +510,7 @@ const viewProduct = (product) => {
   font-weight: 700;
 }
 
-.category-indicator {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4rpx;
-  height: 32rpx;
-  background: var(--primary-color);
-  border-radius: 2rpx 0 0 2rpx;
-}
+
 
 /* 右侧内容区域 */
 .right-content {

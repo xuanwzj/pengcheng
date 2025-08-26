@@ -80,6 +80,28 @@ const navigateToProducts = () => {
     url: '/pages/menu/index'
   })
 }
+
+// 显示二维码大图
+const showQRCode = () => {
+  uni.previewImage({
+    urls: ['/static/qrcode.png'],
+    current: '/static/qrcode.png'
+  })
+}
+
+// 复制微信号
+const copyWechat = () => {
+  const wechatId = 'chaoshan_techan' // 这里可以替换为实际的微信号
+  uni.setClipboardData({
+    data: wechatId,
+    success: () => {
+      uni.showToast({
+        title: '微信号已复制',
+        icon: 'success'
+      })
+    }
+  })
+}
 </script>
 
 <template>
@@ -184,6 +206,40 @@ const navigateToProducts = () => {
           </view>
         </view>
       </view>
+
+      <!-- 联系店主卡片 -->
+      <view class="contact-card">
+        <view class="contact-header">
+          <view class="logo-section">
+            <image src="/static/logo.png" class="brand-logo" mode="aspectFit" />
+            <view class="logo-info">
+              <text class="contact-title">联系店主</text>
+              <text class="contact-subtitle">扫码添加微信，获取更多优惠</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="contact-content">
+          <view class="qr-section" @tap="showQRCode">
+            <image src="/static/qrcode.png" class="qr-preview" mode="aspectFit" />
+            <view class="qr-info">
+              <text class="qr-title">微信扫一扫</text>
+              <text class="qr-desc">点击查看大图</text>
+            </view>
+          </view>
+          
+          <view class="contact-actions">
+            <view class="action-btn primary" @tap="showQRCode">
+              <text class="btn-icon">📱</text>
+              <text class="btn-text">扫码联系</text>
+            </view>
+            <view class="action-btn secondary" @tap="copyWechat">
+              <text class="btn-icon">📋</text>
+              <text class="btn-text">复制微信号</text>
+            </view>
+          </view>
+        </view>
+      </view>
       
       <!-- 底部间距 -->
       <view class="bottom-space"></view>
@@ -192,17 +248,18 @@ const navigateToProducts = () => {
 </template>
 
 <style scoped>
-/* 喜茶风格用户页面 */
+/* 统一风格用户页面 */
 .xicha-user-page {
   min-height: 100vh;
-  background: #fafafa;
+  background: var(--bg-primary);
 }
 
-/* 顶部区域 - 参考菜单页风格 */
+/* 顶部区域 - 统一品牌风格 */
 .top-section {
-  background: linear-gradient(135deg, #f5f2e9 0%, #e8e2d4 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
   padding-bottom: 32rpx;
   position: relative;
+  color: #FFFFFF;
 }
 
 /* 自定义导航栏 (包含安全区域) */
@@ -219,7 +276,7 @@ const navigateToProducts = () => {
 .nav-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #3d3d3d;
+  color: #FFFFFF;
 }
 
 /* 品牌信息栏 */
@@ -238,13 +295,13 @@ const navigateToProducts = () => {
 
 .brand-type, .heritage-type {
   font-size: 24rpx;
-  color: #666;
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 500;
 }
 
 .divider {
   font-size: 24rpx;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.7);
   margin: 0 8rpx;
 }
 
@@ -256,7 +313,7 @@ const navigateToProducts = () => {
 .brand-title {
   font-size: 40rpx;
   font-weight: 800;
-  color: #333;
+  color: #FFFFFF;
   margin-bottom: 8rpx;
   display: block;
   letter-spacing: 2rpx;
@@ -264,18 +321,18 @@ const navigateToProducts = () => {
 
 .brand-desc {
   font-size: 26rpx;
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
 }
 
 /* 品牌标语 */
 .brand-slogan {
-  padding: 0 32rpx 16rpx;
+  padding: 0 32rpx 32rpx;
 }
 
 .slogan-text {
   font-size: 22rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.85);
   font-style: italic;
   letter-spacing: 1rpx;
   font-weight: 400;
@@ -292,7 +349,13 @@ const navigateToProducts = () => {
   border-radius: 20rpx;
   padding: 32rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.category-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
 }
 
 .card-header {
@@ -379,7 +442,13 @@ const navigateToProducts = () => {
   border-radius: 20rpx;
   padding: 32rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.benefits-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
 }
 
 .benefits-grid {
@@ -436,8 +505,14 @@ const navigateToProducts = () => {
   background: white;
   border-radius: 20rpx;
   padding: 0;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.culture-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
 }
 
 .culture-list {
@@ -496,6 +571,164 @@ const navigateToProducts = () => {
 .arrow-right {
   font-size: 24rpx;
   color: #ccc;
+}
+
+/* 联系店主卡片 */
+.contact-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 0;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.contact-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
+}
+
+.contact-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  padding: 32rpx;
+  color: white;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.brand-logo {
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16rpx;
+  padding: 8rpx;
+}
+
+.logo-info {
+  flex: 1;
+}
+
+.contact-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.contact-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+}
+
+.contact-content {
+  padding: 32rpx;
+}
+
+.qr-section {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: #F8F9FA;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.qr-section:active {
+  background: #E9ECEF;
+  transform: scale(0.98);
+}
+
+.qr-preview {
+  width: 120rpx;
+  height: 120rpx;
+  background: white;
+  border-radius: 12rpx;
+  padding: 8rpx;
+  margin-right: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.qr-info {
+  flex: 1;
+}
+
+.qr-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.qr-desc {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.action-btn.primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.action-btn.secondary {
+  background: #F8F9FA;
+  color: #333;
+  border: 2rpx solid #E9ECEF;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn.primary:active {
+  background: var(--primary-dark);
+}
+
+.action-btn.secondary:active {
+  background: #E9ECEF;
+}
+
+.btn-icon {
+  font-size: 32rpx;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.btn-text {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.action-btn.primary .btn-text {
+  color: white;
+}
+
+.action-btn.secondary .btn-text {
+  color: #333;
 }
 
 .bottom-space {
