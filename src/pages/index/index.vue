@@ -72,7 +72,7 @@
             @tap="navigateToCategory(nav)"
           >
             <view class="nav-image-container">
-              <image :src="nav.image" class="nav-image" mode="aspectFit" />
+              <image :src="nav.image" class="nav-image" mode="aspectFill" />
             </view>
             <text class="nav-title">{{ nav.title }}</text>
             <text class="nav-subtitle">{{ nav.subtitle }}</text>
@@ -97,7 +97,7 @@
             :key="index"
             @tap="viewProduct(product)"
           >
-            <image :src="product.image" class="featured-card-image" mode="aspectFit" />
+            <image :src="product.image" class="featured-card-image" mode="aspectFill" />
             <view class="featured-card-content">
               <view class="card-header">
                 <text class="featured-card-name">{{ product.name }}</text>
@@ -105,9 +105,9 @@
               </view>
               <text class="featured-card-desc">{{ product.description }}</text>
               <view class="card-actions">
-                <view class="add-to-cart-btn">
-                  <text class="cart-btn-text">加入购物车</text>
-                </view>
+                                  <view class="add-to-cart-btn" @tap.stop="addToSelection(product)">
+                    <text class="cart-btn-text">添加到清单</text>
+                  </view>
               </view>
             </view>
           </view>
@@ -133,15 +133,15 @@
             @tap="viewProduct(product)"
           >
             <view class="featured-card">
-              <image :src="product.image" class="featured-img" mode="aspectFit" />
+              <image :src="product.image" class="featured-img" mode="aspectFill" />
               <view class="featured-overlay">
                 <view class="featured-info">
                   <text class="featured-name">{{ product.name }}</text>
                   <text class="featured-desc">{{ product.description }}</text>
                   <view class="featured-price">
                     <text class="price-text">¥{{ product.price }}</text>
-                    <view class="featured-btn">
-                      <text class="btn-text">立即购买</text>
+                    <view class="featured-btn" @tap.stop="addToSelection(product)">
+                      <text class="btn-text">添加到清单</text>
                     </view>
                   </view>
                 </view>
@@ -169,7 +169,7 @@
             @tap="navigateToCategory(category)"
           >
             <view class="category-card">
-              <image :src="category.image" class="category-img" mode="aspectFit" />
+              <image :src="category.image" class="category-img" mode="aspectFill" />
               <view class="category-overlay">
                 <text class="category-name">{{ category.name }}</text>
                 <text class="category-desc">{{ category.description }}</text>
@@ -198,14 +198,14 @@
             @tap="viewProduct(product)"
           >
             <view class="compact-card">
-              <image :src="product.image" class="compact-image" mode="aspectFit" />
+              <image :src="product.image" class="compact-image" mode="aspectFill" />
               <view class="compact-overlay">
                 <view class="compact-content">
                   <text class="compact-name">{{ product.name }}</text>
                   <view class="compact-footer">
                     <text class="compact-price">¥{{ product.price }}</text>
-                    <view class="compact-add-btn">
-                      <text class="compact-add-text">购买</text>
+                    <view class="compact-add-btn" @tap.stop="addToSelection(product)">
+                      <text class="compact-add-text">选择</text>
                     </view>
                   </view>
                 </view>
@@ -218,11 +218,186 @@
       <!-- 底部安全区域 -->
       <view class="safe-area-bottom"></view>
     </scroll-view>
+    
+    <!-- 浮动清单按钮 -->
+    <view class="floating-cart-btn" @tap="toggleSelectedList" v-if="selectedCount > 0">
+      <view class="cart-icon">📋</view>
+      <view class="cart-count">{{ selectedCount }}</view>
+    </view>
+    
+    <!-- 选择清单弹窗 -->
+    <view class="selection-modal" v-if="showSelectedList" @tap="showSelectedList = false">
+      <view class="modal-content" @tap.stop>
+        <view class="modal-header">
+          <text class="modal-title">我的选择清单</text>
+          <view class="modal-actions">
+            <view class="share-btn" @tap="shareSelection">
+              <text class="share-icon">📤</text>
+              <text class="share-text">分享</text>
+            </view>
+            <view class="close-btn" @tap="showSelectedList = false">
+              <text class="close-icon">✕</text>
+            </view>
+          </view>
+        </view>
+        
+        <scroll-view class="modal-body" scroll-y>
+          <view class="selected-item" v-for="item in selectedItems" :key="item.id">
+            <image :src="item.image" class="item-image" mode="aspectFill" />
+            <view class="item-info">
+              <text class="item-name">{{ item.name }}</text>
+              <text class="item-desc">{{ item.description }}</text>
+              <view class="item-footer">
+                <text class="item-price">¥{{ item.price }}</text>
+                <text class="item-quantity">x{{ item.quantity }}</text>
+              </view>
+            </view>
+            <view class="item-actions">
+              <view class="remove-btn" @tap="removeFromSelection(item.id)">
+                <text class="remove-icon">🗑️</text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+        
+        <view class="modal-footer">
+          <view class="total-info">
+            <text class="total-text">共选择 {{ selectedCount }} 个商品</text>
+          </view>
+          <view class="footer-actions">
+            <view class="clear-btn" @tap="selectedItems = []">
+              <text class="btn-text">清空</text>
+            </view>
+            <view class="share-big-btn" @tap="shareSelection">
+              <text class="btn-text">分享清单</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+// 选择清单状态
+const selectedItems = ref([])
+const showSelectedList = ref(false)
+
+// 计算选择的商品总数
+const selectedCount = computed(() => selectedItems.value.length)
+
+// 添加到选择清单
+const addToSelection = (product) => {
+  const existingItem = selectedItems.value.find(item => item.id === product.id)
+  if (existingItem) {
+    existingItem.quantity++
+  } else {
+    selectedItems.value.push({
+      ...product,
+      quantity: 1,
+      selectedAt: Date.now()
+    })
+  }
+  
+  uni.showToast({
+    title: '已添加到清单',
+    icon: 'success',
+    duration: 1500
+  })
+}
+
+// 从选择清单移除
+const removeFromSelection = (productId) => {
+  const index = selectedItems.value.findIndex(item => item.id === productId)
+  if (index > -1) {
+    selectedItems.value.splice(index, 1)
+  }
+}
+
+// 显示选择清单
+const toggleSelectedList = () => {
+  if (selectedCount.value === 0) {
+    uni.showToast({
+      title: '请先选择商品',
+      icon: 'none'
+    })
+    return
+  }
+  showSelectedList.value = !showSelectedList.value
+}
+
+// 分享清单
+const shareSelection = () => {
+  if (selectedCount.value === 0) {
+    uni.showToast({
+      title: '清单为空，无法分享',
+      icon: 'none'
+    })
+    return
+  }
+  
+  // 这里可以实现截图分享功能
+  uni.showModal({
+    title: '分享清单',
+    content: `您选择了${selectedCount.value}个商品，是否要截图分享给朋友？`,
+    confirmText: '分享',
+    success: (res) => {
+      if (res.confirm) {
+        // 实现截图功能
+        captureAndShare()
+      }
+    }
+  })
+}
+
+// 截图分享功能
+const captureAndShare = () => {
+  // 生成分享内容
+  const shareContent = generateShareContent()
+  
+  // 显示分享内容
+  uni.showModal({
+    title: '分享清单',
+    content: shareContent,
+    confirmText: '复制分享',
+    cancelText: '关闭',
+    success: (res) => {
+      if (res.confirm) {
+        // 复制到剪贴板
+        uni.setClipboardData({
+          data: shareContent,
+          success: () => {
+            uni.showToast({
+              title: '已复制到剪贴板',
+              icon: 'success'
+            })
+          }
+        })
+      }
+    }
+  })
+}
+
+// 生成分享内容
+const generateShareContent = () => {
+  let content = `🍃 潮汕传承·道地特产 🍃\n\n我的选择清单：\n`
+  
+  selectedItems.value.forEach((item, index) => {
+    content += `${index + 1}. ${item.name} ¥${item.price}`
+    if (item.quantity > 1) {
+      content += ` x${item.quantity}`
+    }
+    content += `\n`
+  })
+  
+  content += `\n📋 共选择 ${selectedCount.value} 个商品\n`
+  content += `🌟 传承千年制作工艺，药食同源\n`
+  content += `📱 欢迎一起品尝潮汕传统美味！`
+  
+  return content
+}
 
 // 产品轮播数据
 const featuredCarousel = ref([
@@ -608,10 +783,7 @@ const navigateToMenu = () => {
 }
 
 const viewProduct = (product) => {
-  uni.showToast({
-    title: `查看商品: ${product.name}`,
-    icon: 'none'
-  })
+  addToSelection(product)
 }
 </script>
 
@@ -651,10 +823,11 @@ const viewProduct = (product) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.4));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   padding-left: 32rpx;
@@ -712,7 +885,8 @@ const viewProduct = (product) => {
 .hero-content {
   text-align: center;
   color: #FFFFFF;
-  padding-bottom: 120rpx;
+  padding: 0;
+  margin: 0;
 }
 
 .hero-main-title {
@@ -793,7 +967,8 @@ const viewProduct = (product) => {
 .product-hero-content {
   text-align: center;
   color: #FFFFFF;
-  padding-bottom: 120rpx;
+  padding: 0;
+  margin: 0;
   position: relative;
 }
 
@@ -1505,5 +1680,256 @@ const viewProduct = (product) => {
   height: env(safe-area-inset-bottom);
   min-height: 60rpx;
   background: #ffffff;
+}
+
+/* 浮动清单按钮 */
+.floating-cart-btn {
+  position: fixed;
+  right: 32rpx;
+  bottom: 120rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(212, 165, 116, 0.4);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.floating-cart-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(212, 165, 116, 0.6);
+}
+
+.cart-icon {
+  font-size: 40rpx;
+  color: #FFFFFF;
+  margin-bottom: 4rpx;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  background: #FF4444;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+  padding: 0 8rpx;
+}
+
+/* 选择清单弹窗 */
+.selection-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 2000;
+}
+
+.modal-content {
+  width: 100%;
+  max-height: 80vh;
+  background: #FFFFFF;
+  border-radius: 24rpx 24rpx 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  background: var(--primary-color);
+  border-radius: 20rpx;
+}
+
+.share-icon {
+  font-size: 24rpx;
+  color: #FFFFFF;
+}
+
+.share-text {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.close-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  border-radius: 50%;
+}
+
+.close-icon {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 0 32rpx;
+  max-height: 50vh;
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.selected-item:last-child {
+  border-bottom: none;
+}
+
+.item-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  margin-right: 24rpx;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.item-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-price {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.item-quantity {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: 500;
+}
+
+.item-actions {
+  margin-left: 16rpx;
+}
+
+.remove-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF2F2;
+  border-radius: 50%;
+}
+
+.remove-icon {
+  font-size: 20rpx;
+}
+
+.modal-footer {
+  padding: 32rpx;
+  border-top: 1rpx solid #F0F0F0;
+  background: #FAFAFA;
+}
+
+.total-info {
+  margin-bottom: 24rpx;
+}
+
+.total-text {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.clear-btn {
+  flex: 1;
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  text-align: center;
+}
+
+.share-big-btn {
+  flex: 2;
+  padding: 24rpx;
+  background: var(--primary-color);
+  border-radius: 16rpx;
+  text-align: center;
+}
+
+.clear-btn .btn-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 600;
+}
+
+.share-big-btn .btn-text {
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 600;
 }
 </style>
