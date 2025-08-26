@@ -70,8 +70,10 @@ const navigateToCustomerService = () => {
   <view class="xicha-user-page">
     <!-- 喜茶风格头部区域 -->
     <view class="header-section">
-      <!-- 状态栏占位 -->
-      <view class="status-bar"></view>
+      <!-- 自定义导航栏 (包含安全区域) -->
+      <view class="custom-nav">
+        <text class="nav-title">我的</text>
+      </view>
       
       <!-- 用户信息卡片 -->
       <view class="user-card">
@@ -177,13 +179,26 @@ const navigateToCustomerService = () => {
 
 /* 头部区域 */
 .header-section {
-  background: linear-gradient(135deg, #00B14F 0%, #00A846 100%);
+  background: linear-gradient(135deg, #f5f2e9 0%, #e8e2d4 100%);
   padding-bottom: 40rpx;
   position: relative;
 }
 
-.status-bar {
-  height: 44rpx;
+/* 自定义导航栏 (包含安全区域) */
+.custom-nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32rpx;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #3d3d3d;
 }
 
 /* 用户信息卡片 */
@@ -221,7 +236,7 @@ const navigateToCustomerService = () => {
   left: -6rpx;
   width: 132rpx;
   height: 132rpx;
-  border: 3rpx solid #00B14F;
+  border: 3rpx solid #d4965a;
   border-radius: 50%;
   opacity: 0.3;
 }
@@ -245,7 +260,7 @@ const navigateToCustomerService = () => {
 }
 
 .vip-badge {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  background: linear-gradient(135deg, #d4965a 0%, #c8834a 100%);
   padding: 8rpx 16rpx;
   border-radius: 16rpx;
 }
@@ -291,13 +306,13 @@ const navigateToCustomerService = () => {
 
 .more-text {
   font-size: 24rpx;
-  color: #00B14F;
+  color: #d4965a;
   font-weight: 500;
 }
 
 .arrow-icon {
   font-size: 20rpx;
-  color: #00B14F;
+  color: #d4965a;
 }
 
 .order-grid {
@@ -384,13 +399,13 @@ const navigateToCustomerService = () => {
 .action-icon-bg {
   width: 80rpx;
   height: 80rpx;
-  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  background: linear-gradient(135deg, #f9f7f3 0%, #f5f2e9 100%);
   border-radius: 20rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 12rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 177, 79, 0.1);
+  box-shadow: 0 4rpx 16rpx rgba(212, 150, 90, 0.1);
 }
 
 .action-icon {
@@ -442,7 +457,7 @@ const navigateToCustomerService = () => {
 .service-icon-wrapper {
   width: 64rpx;
   height: 64rpx;
-  background: #f8f9fa;
+  background: #f5f2e9;
   border-radius: 16rpx;
   display: flex;
   align-items: center;
@@ -471,6 +486,8 @@ const navigateToCustomerService = () => {
 }
 
 .bottom-space {
-  height: 120rpx;
+  height: constant(safe-area-inset-bottom);
+  height: env(safe-area-inset-bottom);
+  min-height: 120rpx;
 }
 </style>

@@ -2,8 +2,10 @@
   <view class="heytea-menu-page">
     <!-- 喜茶式顶部区域 -->
     <view class="top-section">
-      <!-- 状态栏占位 -->
-      <view class="status-bar"></view>
+      <!-- 自定义导航栏 (包含安全区域) -->
+      <view class="custom-nav">
+        <text class="nav-title">道地特产</text>
+      </view>
       
       <!-- 门店信息栏 -->
       <view class="store-info">
@@ -21,13 +23,13 @@
       
       <!-- 门店名称 -->
       <view class="store-name">
-        <text class="store-title">潮汕特产店</text>
-        <text class="store-distance">距离您0.5km</text>
+        <text class="store-title">潮汕传承·道地药材</text>
+        <text class="store-distance">传承千年养生智慧</text>
       </view>
       
       <!-- slogan -->
       <view class="store-slogan">
-        <text class="slogan-text">authentic chaoshan products, by tradition</text>
+        <text class="slogan-text">authentic chaoshan heritage · traditional wellness</text>
       </view>
     </view>
 
@@ -151,79 +153,119 @@ const activeCategory = ref(0)
 
 // 分类数据
 const categories = ref([
-  { name: '时令上新', id: 'new' },
-  { name: '人气推荐榜', id: 'hot' },
-  { name: '超级植物茶', id: 'plant-tea' },
-  { name: '鲜果茶', id: 'fruit-tea' },
-  { name: '千百抹茶', id: 'matcha' },
-  { name: '灵感茗茶', id: 'inspiration-tea' },
-  { name: '波波牛乳茶', id: 'milk-tea' },
-  { name: '灵感茶点', id: 'tea-snacks' }
+  { name: '新品上架', id: 'new' },
+  { name: '人气推荐', id: 'hot' },
+  { name: '陈皮系列', id: 'chenpi' },
+  { name: '佛手系列', id: 'foshou' },
+  { name: '果脯蜜饯', id: 'guopu' },
+  { name: '药膳酒类', id: 'wine' },
+  { name: '养生茶品', id: 'tea' },
+  { name: '传统糕点', id: 'pastry' }
 ])
 
 // 商品数据
 const products = ref([
   {
     id: 1,
-    name: '芭乐雪霸茶王',
-    description: '时令白芭乐+九窨雪霸茶王+芭乐云顶，芭乐灵感茶特调',
-    price: 21,
+    name: '新会陈皮红瓶',
+    description: '新会正宗陈皮，陈香醇厚，理气健脾，传统工艺制作',
+    price: 128,
     sales: 1580,
-    image: '/static/sw1.jpg',
+    image: '/static/product/新会陈皮红瓶.jpg',
     category: 'new',
     isNew: true,
-    tags: ['咖啡因黄灯', '含乳制品、茶']
+    tags: ['新品', '理气健脾', '药食同源']
   },
   {
     id: 2,
-    name: '网纹瓜瓜冰浆',
-    description: '当季牛三网纹瓜+新鲜小青瓜+茶园灿糯米，网纹瓜一藤一个喝足了',
-    price: 22,
+    name: '佛手老香黄300g',
+    description: '古法制作佛手柑，开胃健脾，咸香回甘，潮汕经典',
+    price: 68,
     sales: 2340,
-    image: '/static/sw2.jpg',
+    image: '/static/product/佛手老香黄300.jpg',
     category: 'new',
     isNew: true,
-    tags: ['上新', '0咖啡因', '不含茶']
+    tags: ['新装上市', '开胃健脾', '古法制作']
   },
   {
     id: 3,
-    name: '马黛活力纤体冰',
-    description: '南美马黛茶+蜂蜜雪衣残羽花甘蓝+薄荷，纤体瓶夏日版，温和醒神',
-    price: 22,
+    name: '黄皮鼓500g',
+    description: '精选潮汕黄皮，清热解毒，生津止渴，酸甜可口',
+    price: 52,
     sales: 890,
-    image: '/static/sw1.jpg',
-    category: 'plant-tea',
-    tags: ['咖啡因绿灯', '含马黛茶']
+    image: '/static/product/黄皮鼓500g.jpg',
+    category: 'guopu',
+    tags: ['清热解毒', '生津止渴', '酸甜可口']
   },
   {
     id: 4,
-    name: '新会老陈皮',
-    description: '陈香醇厚，理气健脾，传统工艺制作',
-    price: 128,
+    name: '新会陈皮黄瓶',
+    description: '优质新会陈皮，温和调理，适合日常养生',
+    price: 118,
     sales: 1120,
-    image: '/static/sw2.jpg',
-    category: 'inspiration-tea',
-    tags: ['传统工艺', '药食同源']
+    image: '/static/product/新会陈皮黄瓶.jpg',
+    category: 'chenpi',
+    tags: ['温和调理', '日常养生', '新会正宗']
   },
   {
     id: 5,
-    name: '佛手老香黄',
-    description: '古法工艺，开胃健脾，咸香可口',
-    price: 68,
+    name: '桑葚酒',
+    description: '精选桑葚酿制，养血滋阴，润燥通便，口感甘甜',
+    price: 188,
     sales: 756,
-    image: '/static/sw1.jpg',
-    category: 'inspiration-tea',
-    tags: ['古法制作', '开胃健脾']
+    image: '/static/product/桑葚酒.jpg',
+    category: 'wine',
+    tags: ['养血滋阴', '润燥通便', '甘甜香醇']
   },
   {
     id: 6,
-    name: '陈皮普洱茶',
-    description: '陈皮与普洱完美融合，润肺止咳',
-    price: 88,
+    name: '虎头蜂酒',
+    description: '珍贵虎头蜂浸制，强身健体，滋补养生，口感醇厚',
+    price: 298,
     sales: 1890,
-    image: '/static/sw2.jpg',
-    category: 'inspiration-tea',
-    tags: ['润肺止咳', '含茶叶']
+    image: '/static/product/虎头蜂酒.jpg',
+    category: 'wine',
+    tags: ['强身健体', '滋补养生', '珍贵药材']
+  },
+  {
+    id: 7,
+    name: '川贝老陈皮',
+    description: '川贝配陈皮，止咳化痰，润肺清燥，传统名方',
+    price: 138,
+    sales: 1345,
+    image: '/static/product/川贝老陈皮.jpg',
+    category: 'chenpi',
+    tags: ['止咳化痰', '润肺清燥', '传统名方']
+  },
+  {
+    id: 8,
+    name: '香黄橄榄',
+    description: '潮汕特色橄榄，咸香回甘，开胃消食，天然健康',
+    price: 36,
+    sales: 876,
+    image: '/static/product/香黄橄榄.jpg',
+    category: 'guopu',
+    tags: ['咸香回甘', '开胃消食', '天然健康']
+  },
+  {
+    id: 9,
+    name: '丁香橄榄',
+    description: '丁香调味橄榄，香气浓郁，口感层次丰富',
+    price: 39,
+    sales: 567,
+    image: '/static/product/丁香橄榄.jpg',
+    category: 'guopu',
+    tags: ['香气浓郁', '层次丰富', '精选橄榄']
+  },
+  {
+    id: 10,
+    name: '红糖姜片',
+    description: '古法红糖配生姜，温中散寒，暖胃养生',
+    price: 42,
+    sales: 1234,
+    image: '/static/product/红糖姜片.jpg',
+    category: 'tea',
+    tags: ['温中散寒', '暖胃养生', '古法制作']
   }
 ])
 
@@ -231,19 +273,27 @@ const products = ref([
 const hotProducts = ref([
   {
     id: 101,
-    name: '芭乐雪霸茶王',
-    description: '时令白芭乐+九窨雪霸茶王+芭乐云顶，芭乐灵感茶特调',
-    price: 21,
-    image: '/static/sw1.jpg',
-    tags: ['咖啡因黄灯', '含乳制品、茶']
+    name: '新会陈皮红瓶',
+    description: '新会正宗陈皮，陈香醇厚，理气健脾，传统工艺制作',
+    price: 128,
+    image: '/static/product/新会陈皮红瓶.jpg',
+    tags: ['理气健脾', '药食同源', '人气王']
   },
   {
     id: 102,
-    name: '新会老陈皮',
-    description: '陈香醇厚，理气健脾，传统工艺制作',
-    price: 128,
-    image: '/static/sw2.jpg',
-    tags: ['传统工艺', '药食同源']
+    name: '虎头蜂酒',
+    description: '珍贵虎头蜂浸制，强身健体，滋补养生，口感醇厚',
+    price: 298,
+    image: '/static/product/虎头蜂酒.jpg',
+    tags: ['强身健体', '滋补养生', '珍贵药材']
+  },
+  {
+    id: 103,
+    name: '佛手老香黄300g',
+    description: '古法制作佛手柑，开胃健脾，咸香回甘，潮汕经典',
+    price: 68,
+    image: '/static/product/佛手老香黄300.jpg',
+    tags: ['开胃健脾', '古法制作', '经典口味']
   }
 ])
 
@@ -292,23 +342,38 @@ const viewProduct = (product) => {
 </script>
 
 <style scoped>
-/* 喜茶风格点单页面 */
+/* 现代暖色调特产页面 */
 .heytea-menu-page {
   min-height: 100vh;
-  background: #000000;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
-  color: white;
+  color: var(--text-primary);
 }
 
 /* 顶部区域 */
 .top-section {
-  background: #000000;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
   padding: 0 32rpx;
+  color: #FFFFFF;
 }
 
-.status-bar {
-  height: 44rpx;
+/* 自定义导航栏 (包含安全区域) */
+.custom-nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32rpx;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
 }
 
 /* 门店信息栏 */
@@ -328,17 +393,17 @@ const viewProduct = (product) => {
 .service-type {
   font-size: 28rpx;
   font-weight: 600;
-  color: white;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .divider {
   font-size: 24rpx;
-  color: #666;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .delivery-type {
   font-size: 28rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .store-right {
@@ -356,7 +421,7 @@ const viewProduct = (product) => {
 
 .search-icon {
   font-size: 24rpx;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* 门店名称 */
@@ -365,16 +430,17 @@ const viewProduct = (product) => {
 }
 
 .store-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: white;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
   display: block;
   margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
 }
 
 .store-distance {
-  font-size: 24rpx;
-  color: #999;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
   display: block;
 }
 
@@ -384,25 +450,29 @@ const viewProduct = (product) => {
 }
 
 .slogan-text {
-  font-size: 26rpx;
-  color: #999;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.85);
   font-style: italic;
+  font-weight: 500;
+  letter-spacing: 1rpx;
 }
 
 /* 主要内容区域 */
 .main-container {
   flex: 1;
   display: flex;
-  background: white;
+  background: var(--bg-primary);
   border-radius: 32rpx 32rpx 0 0;
   overflow: hidden;
+  margin-top: 16rpx;
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.1);
 }
 
 /* 左侧分类导航 */
 .left-sidebar {
   width: 200rpx;
-  background: #f8f9fa;
-  border-right: 1rpx solid #e5e5e5;
+  background: var(--bg-secondary);
+  border-right: 1rpx solid var(--border-light);
 }
 
 .category-sidebar {
@@ -412,23 +482,24 @@ const viewProduct = (product) => {
 .category-item {
   position: relative;
   padding: 32rpx 24rpx;
-  background: #f8f9fa;
-  border-bottom: 1rpx solid #eee;
-  transition: all 0.2s ease;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border-light);
+  transition: all 0.3s ease;
 }
 
 .category-item.active {
-  background: white;
-  border-right: 4rpx solid #ff6b35;
+  background: var(--bg-primary);
+  border-right: 4rpx solid var(--primary-color);
+  box-shadow: 2rpx 0 8rpx rgba(212, 165, 116, 0.15);
 }
 
 .category-item:active {
-  background: #e9ecef;
+  background: var(--bg-hover);
 }
 
 .category-name {
-  font-size: 24rpx;
-  color: #333;
+  font-size: 26rpx;
+  color: var(--text-secondary);
   font-weight: 500;
   text-align: center;
   line-height: 1.4;
@@ -436,8 +507,8 @@ const viewProduct = (product) => {
 }
 
 .category-item.active .category-name {
-  color: #ff6b35;
-  font-weight: 600;
+  color: var(--primary-color);
+  font-weight: 700;
 }
 
 .category-indicator {
@@ -447,7 +518,8 @@ const viewProduct = (product) => {
   transform: translateY(-50%);
   width: 4rpx;
   height: 32rpx;
-  background: #ff6b35;
+  background: var(--primary-color);
+  border-radius: 2rpx 0 0 2rpx;
 }
 
 /* 右侧内容区域 */
@@ -460,7 +532,7 @@ const viewProduct = (product) => {
 .category-header {
   padding: 24rpx 32rpx;
   background: white;
-  border-bottom: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f5f2e9;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -578,16 +650,23 @@ const viewProduct = (product) => {
 .product-price {
   font-size: 32rpx;
   font-weight: 700;
-  color: #ff6b35;
+  color: var(--accent-color);
 }
 
 .spec-button {
-  background: #333;
+  background: var(--primary-color);
   color: white;
   padding: 12rpx 24rpx;
   border-radius: 24rpx;
   font-size: 24rpx;
   font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4rpx 12rpx rgba(212, 165, 116, 0.3);
+}
+
+.spec-button:active {
+  transform: scale(0.95);
+  background: var(--primary-dark);
 }
 
 .spec-text {
@@ -597,8 +676,10 @@ const viewProduct = (product) => {
 /* 推荐区域 */
 .recommend-section {
   padding: 32rpx;
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   margin-top: 20rpx;
+  border-radius: 24rpx;
+  margin: 20rpx;
 }
 
 .recommend-header {
@@ -686,14 +767,20 @@ const viewProduct = (product) => {
 .recommend-price {
   font-size: 28rpx;
   font-weight: 700;
-  color: #ff6b35;
+  color: var(--accent-color);
 }
 
 .recommend-spec-btn {
-  background: #333;
+  background: var(--primary-color);
   color: white;
   padding: 8rpx 16rpx;
   border-radius: 16rpx;
+  transition: all 0.2s ease;
+}
+
+.recommend-spec-btn:active {
+  transform: scale(0.95);
+  background: var(--primary-dark);
 }
 
 .rec-spec-text {
@@ -701,6 +788,8 @@ const viewProduct = (product) => {
 }
 
 .bottom-space {
-  height: 120rpx;
+  height: constant(safe-area-inset-bottom);
+  height: env(safe-area-inset-bottom);
+  min-height: 120rpx;
 }
 </style>

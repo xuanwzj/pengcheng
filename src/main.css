@@ -2,34 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ========== 现代简约设计系统 ========== */
+/* ========== 现代大气设计系统 ========== */
 :root {
-  /* 主色调 - 现代简约风格 */
-  --primary-color: #2D3748; /* 深蓝灰 - 主色 */
-  --primary-light: #4A5568; /* 中蓝灰 */
-  --primary-dark: #1A202C; /* 极深蓝灰 */
-  --primary-gradient: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+  /* 主色调 - 现代潮汕暖色系 */
+  --primary-color: #D4A574; /* 现代金棕 - 主色 */
+  --primary-light: #E8C4A0; /* 浅暖金 */
+  --primary-dark: #B8956A; /* 深暖棕 */
+  --primary-gradient: linear-gradient(135deg, #D4A574 0%, #E8C4A0 100%);
   
-  /* 辅助色系 - 现代简约 */
-  --accent-color: #48BB78; /* 清新绿 - 强调色 */
-  --accent-light: #68D391; /* 浅绿 */
-  --accent-dark: #38A169; /* 深绿 */
-  --warning-color: #ED8936; /* 温和橙 */
-  --error-color: #E53E3E; /* 柔和红 */
-  --info-color: #3182CE; /* 蓝色 */
+  /* 辅助色系 - 现代药材色彩 */
+  --accent-color: #E67E22; /* 活力橙金 - 强调色 */
+  --accent-light: #F39C12; /* 明亮金橙 */
+  --accent-dark: #D68910; /* 深沉金橙 */
+  --warning-color: #F4A261; /* 温暖橙 */
+  --error-color: #E74C3C; /* 现代红 */
+  --info-color: #5DADE2; /* 清新蓝 */
   
-  /* 中性色系 - 精致灰度 */
-  --text-primary: #1A202C; /* 主要文字 */
-  --text-secondary: #4A5568; /* 次要文字 */
-  --text-light: #718096; /* 辅助文字 */
-  --text-placeholder: #A0AEC0; /* 占位文字 */
+  /* 传统文化色系 - 现代化 */
+  --heritage-red: #E74C3C; /* 现代传统红 */
+  --heritage-gold: #F39C12; /* 现代传统金 */
+  --heritage-brown: #D4A574; /* 现代传统棕 */
+  --medicine-green: #27AE60; /* 现代药材绿 */
   
-  /* 背景色系 - 层次分明 */
-  --bg-primary: #FFFFFF; /* 主背景 */
-  --bg-secondary: #F7FAFC; /* 次背景 */
-  --bg-tertiary: #EDF2F7; /* 辅助背景 */
-  --bg-card: #FFFFFF; /* 卡片背景 */
-  --bg-hover: #F7FAFC; /* 悬停背景 */
+  /* 中性色系 - 现代雅致灰度 */
+  --text-primary: #2C3E50; /* 现代深灰 */
+  --text-secondary: #5D6D7E; /* 现代中灰 */
+  --text-light: #85929E; /* 现代浅灰 */
+  --text-placeholder: #BDC3C7; /* 现代占位色 */
+  
+  /* 背景色系 - 现代层次 */
+  --bg-primary: #FFFFFF; /* 纯白主背景 */
+  --bg-secondary: #F8F9FA; /* 现代次背景 */
+  --bg-tertiary: #FEF9E7; /* 温暖辅助背景 */
+  --bg-card: #FFFFFF; /* 纯白卡片背景 */
+  --bg-hover: #F5F6FA; /* 现代悬停背景 */
   
   /* 边框和分割线 */
   --border-color: #E2E8F0; /* 主边框 */
@@ -74,6 +80,8 @@
     overflow-x: hidden;
     width: 100%;
     max-width: 100vw;
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
   }
   
   /* 防止横向滚动条的全局样式 */
