@@ -42,7 +42,7 @@
       {
         "pagePath": "pages/menu/index",
         "iconPath": "static/image/icon-mall.png",
-        "selectedIconPath": "static/image/icon-mall.png",
+        "selectedIconPath": "static/image/icon-mall-active.png",
         "text": "菜单"
       },
       {

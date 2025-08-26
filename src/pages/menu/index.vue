@@ -24,7 +24,7 @@
       <!-- 门店名称 -->
       <view class="store-name">
         <text class="store-title">潮汕传承·道地药材</text>
-        <text class="store-distance">传承千年养生智慧</text>
+        <text class="store-distance">传承千年制作工艺</text>
       </view>
       
       <!-- slogan -->
@@ -159,7 +159,7 @@ const categories = ref([
   { name: '佛手系列', id: 'foshou' },
   { name: '果脯蜜饯', id: 'guopu' },
   { name: '药膳酒类', id: 'wine' },
-  { name: '养生茶品', id: 'tea' },
+  { name: '传统茶品', id: 'tea' },
   { name: '传统糕点', id: 'pastry' }
 ])
 
@@ -179,73 +179,73 @@ const products = ref([
   {
     id: 2,
     name: '佛手老香黄300g',
-    description: '古法制作佛手柑，开胃健脾，咸香回甘，潮汕经典',
+    description: '古法制作佛手柑，咸香回甘，传统经典',
     price: 68,
     sales: 2340,
     image: '/static/product/佛手老香黄300.jpg',
     category: 'new',
     isNew: true,
-    tags: ['新装上市', '开胃健脾', '古法制作']
+    tags: ['新装上市', '传统经典', '古法制作']
   },
   {
     id: 3,
     name: '黄皮鼓500g',
-    description: '精选潮汕黄皮，清热解毒，生津止渴，酸甜可口',
+    description: '精选潮汕黄皮，酸甜可口，天然美味',
     price: 52,
     sales: 890,
     image: '/static/product/黄皮鼓500g.jpg',
     category: 'guopu',
-    tags: ['清热解毒', '生津止渴', '酸甜可口']
+    tags: ['酸甜可口', '天然美味', '潮汕特产']
   },
   {
     id: 4,
     name: '新会陈皮黄瓶',
-    description: '优质新会陈皮，温和调理，适合日常养生',
+    description: '优质新会陈皮，香气清雅，口感纯正',
     price: 118,
     sales: 1120,
     image: '/static/product/新会陈皮黄瓶.jpg',
     category: 'chenpi',
-    tags: ['温和调理', '日常养生', '新会正宗']
+    tags: ['香气清雅', '口感纯正', '新会正宗']
   },
   {
     id: 5,
     name: '桑葚酒',
-    description: '精选桑葚酿制，养血滋阴，润燥通便，口感甘甜',
+    description: '精选桑葚酿制，口感甘甜，香气清香',
     price: 188,
     sales: 756,
     image: '/static/product/桑葚酒.jpg',
     category: 'wine',
-    tags: ['养血滋阴', '润燥通便', '甘甜香醇']
+    tags: ['口感甘甜', '香气清香', '精选桑葚']
   },
   {
     id: 6,
     name: '虎头蜂酒',
-    description: '珍贵虎头蜂浸制，强身健体，滋补养生，口感醇厚',
+    description: '珍贵虎头蜂浸制，传统工艺，口感醇厚',
     price: 298,
     sales: 1890,
     image: '/static/product/虎头蜂酒.jpg',
     category: 'wine',
-    tags: ['强身健体', '滋补养生', '珍贵药材']
+    tags: ['传统工艺', '口感醇厚', '珍贵食材']
   },
   {
     id: 7,
     name: '川贝老陈皮',
-    description: '川贝配陈皮，止咳化痰，润肺清燥，传统名方',
+    description: '川贝配陈皮，传统搭配，温润香甜，经典组合',
     price: 138,
     sales: 1345,
     image: '/static/product/川贝老陈皮.jpg',
     category: 'chenpi',
-    tags: ['止咳化痰', '润肺清燥', '传统名方']
+    tags: ['温润香甜', '传统搭配', '经典组合']
   },
   {
     id: 8,
     name: '香黄橄榄',
-    description: '潮汕特色橄榄，咸香回甘，开胃消食，天然健康',
+    description: '潮汕特色橄榄，咸香回甘，天然美味',
     price: 36,
     sales: 876,
     image: '/static/product/香黄橄榄.jpg',
     category: 'guopu',
-    tags: ['咸香回甘', '开胃消食', '天然健康']
+    tags: ['咸香回甘', '天然美味', '潮汕特色']
   },
   {
     id: 9,
@@ -260,12 +260,12 @@ const products = ref([
   {
     id: 10,
     name: '红糖姜片',
-    description: '古法红糖配生姜，温中散寒，暖胃养生',
+    description: '古法红糖配生姜，甘甜温润，传统制作',
     price: 42,
     sales: 1234,
     image: '/static/product/红糖姜片.jpg',
     category: 'tea',
-    tags: ['温中散寒', '暖胃养生', '古法制作']
+    tags: ['甘甜温润', '传统制作', '古法配方']
   }
 ])
 
@@ -290,10 +290,10 @@ const hotProducts = ref([
   {
     id: 103,
     name: '佛手老香黄300g',
-    description: '古法制作佛手柑，开胃健脾，咸香回甘，潮汕经典',
+    description: '古法制作佛手柑，咸香回甘，传统经典',
     price: 68,
     image: '/static/product/佛手老香黄300.jpg',
-    tags: ['开胃健脾', '古法制作', '经典口味']
+    tags: ['传统经典', '古法制作', '经典口味']
   }
 ])
 

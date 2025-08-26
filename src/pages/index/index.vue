@@ -1,62 +1,66 @@
 <template>
   <view class="homepage">
-    <!-- 沉浸式顶部大图区域 -->
-    <view class="hero-banner">
-      <image src="/static/product/新会陈皮红瓶.jpg" class="hero-bg-image" mode="aspectFill" />
-      <view class="hero-overlay">
-        <!-- 顶部导航条 -->
-        <view class="top-nav">
-          <view class="nav-left">
-            <text class="brand-logo">潮汕传承</text>
-          </view>
-          <view class="nav-right">
-            <view class="nav-btn" @tap="navigateToSearch">
-              <text class="nav-icon">🔍</text>
+    <!-- 大轮播区域 -->
+    <view class="hero-carousel-section">
+      <swiper 
+        class="hero-swiper" 
+        autoplay 
+        circular 
+        indicator-dots 
+        indicator-color="rgba(255,255,255,0.5)" 
+        indicator-active-color="#FFFFFF"
+        interval="4000"
+        duration="800"
+      >
+        <!-- 品牌介绍首屏 -->
+        <swiper-item>
+          <view class="hero-slide">
+            <image src="/static/product/新会陈皮红瓶.jpg" class="hero-bg-image" mode="aspectFill" />
+            <view class="hero-overlay">
+              <view class="hero-content">
+                <text class="hero-main-title">潮汕传承</text>
+                <text class="hero-subtitle">传承千年制作工艺</text>
+                <text class="hero-description">精选潮汕本地优质食材，古法工艺现代传承</text>
+                <view class="hero-actions">
+                  <view class="primary-btn" @tap="navigateToMenu">
+                    <text class="btn-text">立即选购</text>
+                  </view>
+                  <view class="secondary-btn">
+                    <text class="btn-text">了解更多</text>
+                  </view>
+                </view>
+              </view>
             </view>
-            <view class="nav-btn">
-              <text class="nav-icon">👤</text>
-            </view>
           </view>
-        </view>
+        </swiper-item>
         
-        <!-- 主标题区域 -->
-        <view class="hero-content">
-          <text class="hero-main-title">道地药材</text>
-          <text class="hero-subtitle">传承千年养生智慧</text>
-          <text class="hero-description">精选潮汕本地优质药材，古法工艺现代传承</text>
-          <view class="hero-actions">
-            <view class="primary-btn" @tap="navigateToMenu">
-              <text class="btn-text">立即选购</text>
-            </view>
-            <view class="secondary-btn">
-              <text class="btn-text">了解更多</text>
+        <!-- 产品轮播 -->
+        <swiper-item v-for="(product, index) in featuredCarousel" :key="index">
+          <view class="hero-slide" @tap="viewProduct(product)">
+            <image :src="product.image" class="hero-bg-image" mode="aspectFill" />
+            <view class="hero-overlay">
+              <view class="product-hero-content">
+                <view class="product-badge">{{ product.badge }}</view>
+                <text class="product-hero-name">{{ product.name }}</text>
+                <text class="product-hero-desc">{{ product.description }}</text>
+                <view class="product-hero-price">
+                  <text class="price-symbol">¥</text>
+                  <text class="price-value">{{ product.price }}</text>
+                </view>
+                <view class="product-action">
+                  <view class="product-btn">
+                    <text class="btn-text">立即购买</text>
+                  </view>
+                </view>
+              </view>
             </view>
           </view>
-        </view>
-      </view>
+        </swiper-item>
+      </swiper>
     </view>
 
     <!-- 主内容区域 -->
     <scroll-view class="main-scroll" scroll-y>
-      <!-- 产品轮播大图 -->
-      <view class="product-carousel-section">
-        <swiper class="product-swiper" autoplay circular indicator-dots indicator-color="rgba(0,0,0,0.3)" indicator-active-color="var(--primary-color)">
-          <swiper-item v-for="(product, index) in featuredCarousel" :key="index">
-            <view class="carousel-slide" @tap="viewProduct(product)">
-              <image :src="product.image" class="carousel-image" mode="aspectFill" />
-              <view class="carousel-content">
-                <view class="product-badge">{{ product.badge }}</view>
-                <text class="product-carousel-name">{{ product.name }}</text>
-                <text class="product-carousel-desc">{{ product.description }}</text>
-                <view class="product-carousel-price">
-                  <text class="price-symbol">¥</text>
-                  <text class="price-value">{{ product.price }}</text>
-                </view>
-              </view>
-            </view>
-          </swiper-item>
-        </swiper>
-      </view>
 
       <!-- 快速导航卡片 -->
       <view class="quick-nav-section">
@@ -68,7 +72,7 @@
             @tap="navigateToCategory(nav)"
           >
             <view class="nav-image-container">
-              <image :src="nav.image" class="nav-image" mode="aspectFill" />
+              <image :src="nav.image" class="nav-image" mode="aspectFit" />
             </view>
             <text class="nav-title">{{ nav.title }}</text>
             <text class="nav-subtitle">{{ nav.subtitle }}</text>
@@ -93,7 +97,7 @@
             :key="index"
             @tap="viewProduct(product)"
           >
-            <image :src="product.image" class="featured-card-image" mode="aspectFill" />
+            <image :src="product.image" class="featured-card-image" mode="aspectFit" />
             <view class="featured-card-content">
               <view class="card-header">
                 <text class="featured-card-name">{{ product.name }}</text>
@@ -129,7 +133,7 @@
             @tap="viewProduct(product)"
           >
             <view class="featured-card">
-              <image :src="product.image" class="featured-img" mode="aspectFill" />
+              <image :src="product.image" class="featured-img" mode="aspectFit" />
               <view class="featured-overlay">
                 <view class="featured-info">
                   <text class="featured-name">{{ product.name }}</text>
@@ -155,7 +159,7 @@
             <text class="section-title">分类精品</text>
             <view class="title-line"></view>
           </view>
-          <text class="section-subtitle">按传统分类，各具功效</text>
+          <text class="section-subtitle">按传统分类，各有特色</text>
         </view>
         <view class="category-grid">
           <view 
@@ -165,7 +169,7 @@
             @tap="navigateToCategory(category)"
           >
             <view class="category-card">
-              <image :src="category.image" class="category-img" mode="aspectFill" />
+              <image :src="category.image" class="category-img" mode="aspectFit" />
               <view class="category-overlay">
                 <text class="category-name">{{ category.name }}</text>
                 <text class="category-desc">{{ category.description }}</text>
@@ -194,7 +198,7 @@
             @tap="viewProduct(product)"
           >
             <view class="compact-card">
-              <image :src="product.image" class="compact-image" mode="aspectFill" />
+              <image :src="product.image" class="compact-image" mode="aspectFit" />
               <view class="compact-overlay">
                 <view class="compact-content">
                   <text class="compact-name">{{ product.name }}</text>
@@ -241,7 +245,7 @@ const featuredCarousel = ref([
   {
     id: 3,
     name: '川贝老陈皮',
-    description: '止咳化痰，润肺清燥',
+    description: '传统食材，温润清香',
     price: 138,
     image: '/static/product/川贝老陈皮.jpg',
     badge: '新品'
@@ -316,7 +320,7 @@ const featuredProducts = ref([
   {
     id: 6,
     name: '川贝老陈皮',
-    description: '止咳化痰，润肺清燥',
+    description: '传统食材，温润清香',
     price: 138,
     image: '/static/product/川贝老陈皮.jpg'
   }
@@ -618,10 +622,20 @@ const viewProduct = (product) => {
   background: var(--bg-primary);
 }
 
-/* 沉浸式顶部大图区域 */
-.hero-banner {
+/* 大轮播区域 */
+.hero-carousel-section {
   position: relative;
   height: 100vh;
+  overflow: hidden;
+}
+
+.hero-swiper {
+  height: 100%;
+}
+
+.hero-slide {
+  position: relative;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -775,6 +789,79 @@ const viewProduct = (product) => {
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
 }
 
+/* 产品轮播内容样式 */
+.product-hero-content {
+  text-align: center;
+  color: #FFFFFF;
+  padding-bottom: 120rpx;
+  position: relative;
+}
+
+.product-badge {
+  display: inline-block;
+  background: var(--accent-color);
+  color: #FFFFFF;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(230, 126, 34, 0.4);
+  margin-bottom: 20rpx;
+}
+
+.product-hero-name {
+  font-size: 64rpx;
+  font-weight: 900;
+  color: #FFFFFF;
+  display: block;
+  margin-bottom: 20rpx;
+  text-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 4rpx;
+  line-height: 1.1;
+}
+
+.product-hero-desc {
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.95);
+  display: block;
+  margin-bottom: 30rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 2rpx;
+}
+
+.product-hero-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8rpx;
+  margin-bottom: 40rpx;
+}
+
+.product-action {
+  display: flex;
+  justify-content: center;
+}
+
+.product-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 24rpx 48rpx;
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+}
+
+.product-btn:active {
+  transform: translateY(2rpx) scale(0.98);
+  background: rgba(255, 255, 255, 1);
+}
+
+.product-btn .btn-text {
+  color: #333;
+  font-weight: 600;
+  font-size: 28rpx;
+}
+
 /* 主滚动区域 */
 .main-scroll {
   background: var(--bg-primary);
@@ -785,74 +872,7 @@ const viewProduct = (product) => {
   box-shadow: 0 -12rpx 32rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 产品轮播区域 */
-.product-carousel-section {
-  padding: 60rpx 0 40rpx;
-}
 
-.product-swiper {
-  height: 480rpx;
-  padding: 0 24rpx;
-}
-
-.carousel-slide {
-  position: relative;
-  border-radius: 32rpx;
-  overflow: hidden;
-  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
-  height: 100%;
-}
-
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.carousel-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  padding: 60rpx 32rpx 32rpx;
-  color: #FFFFFF;
-}
-
-.product-badge {
-  position: absolute;
-  top: -40rpx;
-  right: 20rpx;
-  background: var(--accent-color);
-  color: #FFFFFF;
-  padding: 8rpx 20rpx;
-  border-radius: 20rpx;
-  font-size: 22rpx;
-  font-weight: 600;
-  box-shadow: 0 4rpx 12rpx rgba(230, 126, 34, 0.4);
-}
-
-.product-carousel-name {
-  font-size: 36rpx;
-  font-weight: 700;
-  margin-bottom: 12rpx;
-  display: block;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
-}
-
-.product-carousel-desc {
-  font-size: 26rpx;
-  opacity: 0.9;
-  margin-bottom: 20rpx;
-  display: block;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
-}
-
-.product-carousel-price {
-  display: flex;
-  align-items: baseline;
-  gap: 4rpx;
-}
 
 .price-symbol {
   font-size: 28rpx;

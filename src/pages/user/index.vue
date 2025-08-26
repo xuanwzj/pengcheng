@@ -1,163 +1,184 @@
 <script setup>
 import { ref } from 'vue'
 
-const orderTypes = ref([
-  { name: '待付款', icon: '💰', count: 2 },
-  { name: '待发货', icon: '📦', count: 0 },
-  { name: '待收货', icon: '🚚', count: 1 },
-  { name: '已完成', icon: '✅', count: 0 }
+// 药食同源产品分类
+const productCategories = ref([
+  { name: '陈皮类', icon: '🍊', description: '传统食材，芳香怡人', action: 'chenpi' },
+  { name: '佛手类', icon: '🙏', description: '香气清雅，口感独特', action: 'foshou' },
+  { name: '果脯类', icon: '🍇', description: '酸甜可口，营养丰富', action: 'guopu' },
+  { name: '药膳类', icon: '🥄', description: '传统工艺，精心制作', action: 'yaoshan' }
 ])
 
-const quickActions = ref([
-  { name: '我的收藏', icon: '❤️', action: 'favorites' },
-  { name: '收货地址', icon: '📍', action: 'address' },
-  { name: '优惠券', icon: '🎫', action: 'coupons' },
-  { name: '积分商城', icon: '🏆', action: 'points' }
+// 产品特色介绍
+const productFeatures = ref([
+  { name: '传统风味', icon: '🌿', description: '古法制作，口味纯正', action: 'tradition' },
+  { name: '工艺精湛', icon: '🫁', description: '选材严格，制作精细', action: 'craft' },
+  { name: '口感丰富', icon: '💧', description: '层次分明，回味悠长', action: 'taste' },
+  { name: '营养价值', icon: '🍽️', description: '天然食材，营养均衡', action: 'nutrition' }
 ])
 
-const serviceItems = ref([
-  { name: '客服中心', icon: '💬', action: 'service' },
-  { name: '意见反馈', icon: '📝', action: 'feedback' },
-  { name: '关于我们', icon: 'ℹ️', action: 'about' },
-  { name: '设置', icon: '⚙️', action: 'settings' }
+// 传统文化与现代应用
+const cultureItems = ref([
+  { name: '传统工艺', icon: '🏺', action: 'tradition' },
+  { name: '现代研究', icon: '🔬', action: 'research' },
+  { name: '食用指南', icon: '📖', action: 'guide' },
+  { name: '联系我们', icon: '📞', action: 'contact' }
 ])
 
 
 
-const navigateToOrders = () => {
+const handleCategoryClick = (category) => {
+  const categoryInfo = {
+    'chenpi': '陈皮是传统的药食同源食材，新会陈皮更是其中的上品，具有独特的芳香和风味。我们的陈皮系列产品采用传统工艺制作，保持原有的香气和口感。',
+    'foshou': '佛手是传统的香料食材，气味芳香清雅。我们的佛手系列产品保持了其独特的香气和口感，可作为日常茶点享用。',
+    'guopu': '传统果脯类食品，采用天然水果经传统工艺制作而成。保留了水果的天然风味，酸甜可口，是美味的休闲零食。',
+    'yaoshan': '药膳是中华传统美食文化的重要组成部分，将食材精心搭配，既美味又具有独特的文化内涵。'
+  }
+  
   uni.showModal({
-    title: '订单查看',
-    content: '这是一个纯展示小程序，订单功能仅供参考',
+    title: category.name + '科普',
+    content: categoryInfo[category.action] || '传承传统工艺，品味地道美食',
+    showCancel: false,
+    confirmText: '了解了'
+  })
+}
+
+const handleFeatureClick = (feature) => {
+  const featureInfo = {
+    'tradition': '传统潮汕食品制作工艺历史悠久，注重选材和工序，每一步都凝聚着匠人精神。我们坚持传统制法，确保原汁原味。',
+    'craft': '从原料选择到加工制作，每个环节都严格把控。采用传统工艺结合现代卫生标准，为您提供安全放心的食品。',
+    'taste': '我们的产品层次丰富，有的酸甜可口，有的香气浓郁，有的回味悠长，每一种都有其独特的风味特色。',
+    'nutrition': '选用优质天然食材，保留食物本身的营养成分。作为日常零食或茶点，为您的生活增添美味。'
+  }
+  
+  uni.showModal({
+    title: feature.name + '介绍',
+    content: featureInfo[feature.action] || '传承传统工艺，追求品质美味',
+    showCancel: false,
+    confirmText: '了解了'
+  })
+}
+
+const handleCultureClick = (item) => {
+  const cultureInfo = {
+    'tradition': '潮汕传统制作工艺历史悠久，注重选材、工序精细，每一步都体现着先辈的智慧。我们坚持传统工艺，确保产品的正宗品质。',
+    'research': '现代科学研究证实了许多传统食材的营养价值和功能成分。我们结合传统经验与现代技术，为您提供更安全、更优质的产品。',
+    'guide': '建议适量食用，因人而异。孕妇、儿童及特殊体质人群请咨询专业人士后食用。保持均衡饮食，配合适量运动。',
+    'contact': '如有疑问或需要了解更多产品信息，欢迎联系我们。我们将为您提供专业的咨询服务。'
+  }
+  
+  uni.showModal({
+    title: item.name,
+    content: cultureInfo[item.action] || '传承与创新并重，为您的健康保驾护航',
     showCancel: false,
     confirmText: '知道了'
   })
 }
 
-const navigateToOrderDetail = (type) => {
-  uni.showModal({
-    title: type.name,
-    content: '这是一个纯展示小程序，订单功能仅供参考',
-    showCancel: false,
-    confirmText: '知道了'
-  })
-}
-
-const handleToolClick = (tool) => {
-  uni.showModal({
-    title: tool.name,
-    content: '这是一个纯展示小程序，功能仅供参考',
-    showCancel: false,
-    confirmText: '知道了'
-  })
-}
-
-const handleRecommendClick = (item) => {
+const navigateToProducts = () => {
   uni.switchTab({
     url: '/pages/menu/index'
-  })
-}
-
-const navigateToCustomerService = () => {
-  uni.showToast({
-    title: '客服电话：400-888-8888',
-    icon: 'none',
-    duration: 3000
   })
 }
 </script>
 
 <template>
   <view class="xicha-user-page">
-    <!-- 喜茶风格头部区域 -->
-    <view class="header-section">
+    <!-- 类似菜单页的顶部设计 -->
+    <view class="top-section">
       <!-- 自定义导航栏 (包含安全区域) -->
       <view class="custom-nav">
-        <text class="nav-title">我的</text>
+        <text class="nav-title">传统文化</text>
       </view>
       
-      <!-- 用户信息卡片 -->
-      <view class="user-card">
-        <view class="avatar-container">
-          <view class="avatar-wrapper">
-            <image src="/static/default-avatar.png" class="user-avatar" mode="aspectFill" />
-            <view class="avatar-border"></view>
-          </view>
+      <!-- 品牌信息栏 -->
+      <view class="brand-info">
+        <view class="brand-left">
+          <text class="brand-type">文化传承</text>
+          <text class="divider">|</text>
+          <text class="heritage-type">工艺科普</text>
         </view>
-        
-        <view class="user-info">
-          <text class="user-name">潮汕特产</text>
-          <text class="user-desc">传承百年工艺，药食同源</text>
-        </view>
-        
-        <view class="vip-badge">
-          <text class="vip-text">正宗品质</text>
-        </view>
+      </view>
+      
+      <!-- 品牌名称 -->
+      <view class="brand-name">
+        <text class="brand-title">潮汕传承·道地特产</text>
+        <text class="brand-desc">传承千年制作工艺</text>
+      </view>
+      
+      <!-- 品牌标语 -->
+      <view class="brand-slogan">
+        <text class="slogan-text">authentic chaoshan heritage · traditional culture</text>
       </view>
     </view>
 
     <!-- 主要内容区域 -->
     <view class="main-content">
-      <!-- 订单状态卡片 -->
-      <view class="order-card">
+      <!-- 产品分类科普卡片 -->
+      <view class="category-card">
         <view class="card-header">
-          <text class="card-title">我的订单</text>
-          <view class="more-link" @tap="navigateToOrders">
+          <text class="card-title">产品分类</text>
+          <view class="more-link" @tap="navigateToProducts">
             <text class="more-text">查看全部</text>
             <text class="arrow-icon">→</text>
           </view>
         </view>
         
-        <view class="order-grid">
+        <view class="category-grid">
           <view 
-            class="order-item" 
-            v-for="(type, index) in orderTypes" 
+            class="category-item" 
+            v-for="(category, index) in productCategories" 
             :key="index" 
-            @tap="navigateToOrderDetail(type)"
+            @tap="handleCategoryClick(category)"
           >
-            <view class="order-icon-wrapper">
-              <text class="order-icon">{{ type.icon }}</text>
-              <view class="order-badge" v-if="type.count > 0">
-                <text class="badge-count">{{ type.count }}</text>
-              </view>
+            <view class="category-icon-wrapper">
+              <text class="category-icon">{{ category.icon }}</text>
             </view>
-            <text class="order-label">{{ type.name }}</text>
+            <text class="category-label">{{ category.name }}</text>
+            <text class="category-desc">{{ category.description }}</text>
           </view>
         </view>
       </view>
 
-      <!-- 快捷功能卡片 -->
-      <view class="actions-card">
-        <view class="actions-grid">
+      <!-- 功效科普卡片 -->
+      <view class="benefits-card">
+        <view class="card-header">
+          <text class="card-title">产品特色</text>
+          <text class="card-subtitle">传统工艺 · 匠心制作</text>
+        </view>
+        
+        <view class="benefits-grid">
           <view 
-            class="action-item" 
-            v-for="(action, index) in quickActions" 
+            class="benefit-item" 
+            v-for="(feature, index) in productFeatures" 
             :key="index" 
-            @tap="handleToolClick(action)"
+            @tap="handleFeatureClick(feature)"
           >
-            <view class="action-icon-bg">
-              <text class="action-icon">{{ action.icon }}</text>
+            <view class="benefit-icon-bg">
+              <text class="benefit-icon">{{ feature.icon }}</text>
             </view>
-            <text class="action-label">{{ action.name }}</text>
+            <text class="benefit-label">{{ feature.name }}</text>
+            <text class="benefit-desc">{{ feature.description }}</text>
           </view>
         </view>
       </view>
 
-      <!-- 服务中心卡片 -->
-      <view class="service-card">
-        <view class="service-list">
+      <!-- 文化传承卡片 -->
+      <view class="culture-card">
+        <view class="culture-list">
           <view 
-            class="service-item" 
-            v-for="(service, index) in serviceItems" 
+            class="culture-item" 
+            v-for="(item, index) in cultureItems" 
             :key="index" 
-            @tap="handleToolClick(service)"
+            @tap="handleCultureClick(item)"
           >
-            <view class="service-left">
-              <view class="service-icon-wrapper">
-                <text class="service-icon">{{ service.icon }}</text>
+            <view class="culture-left">
+              <view class="culture-icon-wrapper">
+                <text class="culture-icon">{{ item.icon }}</text>
               </view>
-              <text class="service-label">{{ service.name }}</text>
+              <text class="culture-label">{{ item.name }}</text>
             </view>
-            <view class="service-arrow">
+            <view class="culture-arrow">
               <text class="arrow-right">></text>
             </view>
           </view>
@@ -177,10 +198,10 @@ const navigateToCustomerService = () => {
   background: #fafafa;
 }
 
-/* 头部区域 */
-.header-section {
+/* 顶部区域 - 参考菜单页风格 */
+.top-section {
   background: linear-gradient(135deg, #f5f2e9 0%, #e8e2d4 100%);
-  padding-bottom: 40rpx;
+  padding-bottom: 32rpx;
   position: relative;
 }
 
@@ -201,83 +222,72 @@ const navigateToCustomerService = () => {
   color: #3d3d3d;
 }
 
-/* 用户信息卡片 */
-.user-card {
+/* 品牌信息栏 */
+.brand-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 32rpx;
+}
+
+.brand-left {
   display: flex;
   align-items: center;
-  padding: 32rpx;
-  margin: 0 32rpx;
-  background: white;
-  border-radius: 24rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
-  position: relative;
-  top: 20rpx;
+  gap: 16rpx;
 }
 
-.avatar-container {
-  position: relative;
-  margin-right: 24rpx;
+.brand-type, .heritage-type {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: 500;
 }
 
-.avatar-wrapper {
-  position: relative;
+.divider {
+  font-size: 24rpx;
+  color: #ccc;
+  margin: 0 8rpx;
 }
 
-.user-avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  background: #f0f0f0;
+/* 品牌名称 */
+.brand-name {
+  padding: 24rpx 32rpx 16rpx;
 }
 
-.avatar-border {
-  position: absolute;
-  top: -6rpx;
-  left: -6rpx;
-  width: 132rpx;
-  height: 132rpx;
-  border: 3rpx solid #d4965a;
-  border-radius: 50%;
-  opacity: 0.3;
-}
-
-.user-info {
-  flex: 1;
-}
-
-.user-name {
-  font-size: 32rpx;
-  font-weight: 700;
+.brand-title {
+  font-size: 40rpx;
+  font-weight: 800;
   color: #333;
   margin-bottom: 8rpx;
   display: block;
+  letter-spacing: 2rpx;
 }
 
-.user-desc {
-  font-size: 24rpx;
-  color: #888;
-  display: block;
+.brand-desc {
+  font-size: 26rpx;
+  color: #666;
+  font-weight: 500;
 }
 
-.vip-badge {
-  background: linear-gradient(135deg, #d4965a 0%, #c8834a 100%);
-  padding: 8rpx 16rpx;
-  border-radius: 16rpx;
+/* 品牌标语 */
+.brand-slogan {
+  padding: 0 32rpx 16rpx;
 }
 
-.vip-text {
-  font-size: 20rpx;
-  color: white;
-  font-weight: 600;
+.slogan-text {
+  font-size: 22rpx;
+  color: #999;
+  font-style: italic;
+  letter-spacing: 1rpx;
+  font-weight: 400;
 }
 
 /* 主要内容区域 */
 .main-content {
-  padding: 60rpx 32rpx 32rpx;
+  padding: 32rpx 32rpx 32rpx;
 }
 
-/* 订单卡片 */
-.order-card {
+/* 产品分类卡片 */
+.category-card {
   background: white;
   border-radius: 20rpx;
   padding: 32rpx;
@@ -298,6 +308,12 @@ const navigateToCustomerService = () => {
   color: #333;
 }
 
+.card-subtitle {
+  font-size: 24rpx;
+  color: #d4965a;
+  font-weight: 500;
+}
+
 .more-link {
   display: flex;
   align-items: center;
@@ -315,62 +331,50 @@ const navigateToCustomerService = () => {
   color: #d4965a;
 }
 
-.order-grid {
+.category-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24rpx;
 }
 
-.order-item {
+.category-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16rpx;
+  padding: 20rpx;
   transition: transform 0.3s ease;
+  text-align: center;
 }
 
-.order-item:active {
+.category-item:active {
   transform: scale(0.95);
 }
 
-.order-icon-wrapper {
-  position: relative;
+.category-icon-wrapper {
   margin-bottom: 12rpx;
 }
 
-.order-icon {
+.category-icon {
   font-size: 48rpx;
   display: block;
 }
 
-.order-badge {
-  position: absolute;
-  top: -8rpx;
-  right: -8rpx;
-  min-width: 32rpx;
-  height: 32rpx;
-  background: #FF4444;
-  border-radius: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.badge-count {
-  font-size: 20rpx;
-  color: white;
+.category-label {
+  font-size: 26rpx;
+  color: #333;
   font-weight: 600;
-  padding: 0 8rpx;
+  margin-bottom: 8rpx;
 }
 
-.order-label {
-  font-size: 22rpx;
-  color: #666;
+.category-desc {
+  font-size: 20rpx;
+  color: #888;
   text-align: center;
+  line-height: 1.4;
 }
 
-/* 快捷功能卡片 */
-.actions-card {
+/* 功效科普卡片 */
+.benefits-card {
   background: white;
   border-radius: 20rpx;
   padding: 32rpx;
@@ -378,25 +382,26 @@ const navigateToCustomerService = () => {
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
 }
 
-.actions-grid {
+.benefits-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24rpx;
 }
 
-.action-item {
+.benefit-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16rpx;
+  padding: 20rpx;
   transition: transform 0.3s ease;
+  text-align: center;
 }
 
-.action-item:active {
+.benefit-item:active {
   transform: scale(0.95);
 }
 
-.action-icon-bg {
+.benefit-icon-bg {
   width: 80rpx;
   height: 80rpx;
   background: linear-gradient(135deg, #f9f7f3 0%, #f5f2e9 100%);
@@ -408,18 +413,26 @@ const navigateToCustomerService = () => {
   box-shadow: 0 4rpx 16rpx rgba(212, 150, 90, 0.1);
 }
 
-.action-icon {
+.benefit-icon {
   font-size: 36rpx;
 }
 
-.action-label {
-  font-size: 22rpx;
-  color: #666;
-  text-align: center;
+.benefit-label {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8rpx;
 }
 
-/* 服务中心卡片 */
-.service-card {
+.benefit-desc {
+  font-size: 20rpx;
+  color: #888;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* 文化传承卡片 */
+.culture-card {
   background: white;
   border-radius: 20rpx;
   padding: 0;
@@ -427,12 +440,12 @@ const navigateToCustomerService = () => {
   overflow: hidden;
 }
 
-.service-list {
+.culture-list {
   display: flex;
   flex-direction: column;
 }
 
-.service-item {
+.culture-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -441,20 +454,20 @@ const navigateToCustomerService = () => {
   transition: background-color 0.2s ease;
 }
 
-.service-item:last-child {
+.culture-item:last-child {
   border-bottom: none;
 }
 
-.service-item:active {
+.culture-item:active {
   background-color: #f8f9fa;
 }
 
-.service-left {
+.culture-left {
   display: flex;
   align-items: center;
 }
 
-.service-icon-wrapper {
+.culture-icon-wrapper {
   width: 64rpx;
   height: 64rpx;
   background: #f5f2e9;
@@ -465,17 +478,17 @@ const navigateToCustomerService = () => {
   margin-right: 20rpx;
 }
 
-.service-icon {
+.culture-icon {
   font-size: 28rpx;
 }
 
-.service-label {
+.culture-label {
   font-size: 28rpx;
   color: #333;
   font-weight: 500;
 }
 
-.service-arrow {
+.culture-arrow {
   display: flex;
   align-items: center;
 }
