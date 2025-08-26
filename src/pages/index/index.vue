@@ -1,35 +1,56 @@
 <template>
   <view class="homepage">
-    <!-- 顶部导航 (包含安全区域) -->
-    <!-- <view class="top-header">
-      <view class="header-content">
-        <view class="brand-section">
-          <text class="brand-name">潮汕传承</text>
-          <text class="brand-subtitle">道地药材 · 匠心工艺</text>
+    <!-- 沉浸式顶部大图区域 -->
+    <view class="hero-banner">
+      <image src="/static/product/新会陈皮红瓶.jpg" class="hero-bg-image" mode="aspectFill" />
+      <view class="hero-overlay">
+        <!-- 顶部导航条 -->
+        <view class="top-nav">
+          <view class="nav-left">
+            <text class="brand-logo">潮汕传承</text>
+          </view>
+          <view class="nav-right">
+            <view class="nav-btn" @tap="navigateToSearch">
+              <text class="nav-icon">🔍</text>
+            </view>
+            <view class="nav-btn">
+              <text class="nav-icon">👤</text>
+            </view>
+          </view>
         </view>
-        <view class="header-actions">
-          <view class="search-btn" @tap="navigateToSearch">
-            <text class="search-icon">🔍</text>
+        
+        <!-- 主标题区域 -->
+        <view class="hero-content">
+          <text class="hero-main-title">道地药材</text>
+          <text class="hero-subtitle">传承千年养生智慧</text>
+          <text class="hero-description">精选潮汕本地优质药材，古法工艺现代传承</text>
+          <view class="hero-actions">
+            <view class="primary-btn" @tap="navigateToMenu">
+              <text class="btn-text">立即选购</text>
+            </view>
+            <view class="secondary-btn">
+              <text class="btn-text">了解更多</text>
+            </view>
           </view>
         </view>
       </view>
-    </view> -->
+    </view>
 
     <!-- 主内容区域 -->
     <scroll-view class="main-scroll" scroll-y>
-      <!-- 主视觉大图轮播 -->
-      <view class="hero-section">
-        <swiper class="hero-swiper" autoplay circular indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#ffffff">
-          <swiper-item v-for="(banner, index) in heroBanners" :key="index">
-            <view class="hero-slide">
-              <image :src="banner.image" class="hero-img" mode="aspectFill" />
-              <view class="hero-overlay">
-                <view class="hero-content">
-                  <text class="hero-title">{{ banner.title }}</text>
-                  <text class="hero-subtitle">{{ banner.subtitle }}</text>
-                  <view class="cta-button" @tap="navigateToMenu">
-                    <text class="cta-text">立即购买</text>
-                  </view>
+      <!-- 产品轮播大图 -->
+      <view class="product-carousel-section">
+        <swiper class="product-swiper" autoplay circular indicator-dots indicator-color="rgba(0,0,0,0.3)" indicator-active-color="var(--primary-color)">
+          <swiper-item v-for="(product, index) in featuredCarousel" :key="index">
+            <view class="carousel-slide" @tap="viewProduct(product)">
+              <image :src="product.image" class="carousel-image" mode="aspectFill" />
+              <view class="carousel-content">
+                <view class="product-badge">{{ product.badge }}</view>
+                <text class="product-carousel-name">{{ product.name }}</text>
+                <text class="product-carousel-desc">{{ product.description }}</text>
+                <view class="product-carousel-price">
+                  <text class="price-symbol">¥</text>
+                  <text class="price-value">{{ product.price }}</text>
                 </view>
               </view>
             </view>
@@ -37,42 +58,52 @@
         </swiper>
       </view>
 
-      <!-- 品牌文化区域 -->
-      <view class="heritage-section">
-        <view class="heritage-bg">
-          <view class="heritage-content">
-            <view class="heritage-header">
-              <text class="heritage-title">药食同源 · 现代传承</text>
-              <text class="heritage-subtitle">汇聚潮汕道地药材，传承千年养生智慧</text>
+      <!-- 快速导航卡片 -->
+      <view class="quick-nav-section">
+        <view class="nav-grid">
+          <view 
+            class="nav-card" 
+            v-for="(nav, index) in quickNavs" 
+            :key="index"
+            @tap="navigateToCategory(nav)"
+          >
+            <view class="nav-image-container">
+              <image :src="nav.image" class="nav-image" mode="aspectFill" />
             </view>
-            <view class="heritage-features">
-              <view class="heritage-item">
-                <view class="heritage-icon-box">
-                  <text class="heritage-icon">🌿</text>
-                </view>
-                <text class="heritage-text">道地药材</text>
-                <text class="heritage-desc">精选潮汕本地优质原料</text>
+            <text class="nav-title">{{ nav.title }}</text>
+            <text class="nav-subtitle">{{ nav.subtitle }}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 精选推荐大卡片 -->
+      <view class="featured-products-section">
+        <view class="section-title-bar">
+          <text class="section-main-title">精选推荐</text>
+          <view class="title-more" @tap="navigateToMenu">
+            <text class="more-text">查看全部</text>
+            <text class="more-arrow">→</text>
+          </view>
+        </view>
+        
+        <view class="featured-cards">
+          <view 
+            class="featured-large-card" 
+            v-for="(product, index) in featuredProducts.slice(0, 2)" 
+            :key="index"
+            @tap="viewProduct(product)"
+          >
+            <image :src="product.image" class="featured-card-image" mode="aspectFill" />
+            <view class="featured-card-content">
+              <view class="card-header">
+                <text class="featured-card-name">{{ product.name }}</text>
+                <text class="featured-card-price">¥{{ product.price }}</text>
               </view>
-              <view class="heritage-item">
-                <view class="heritage-icon-box">
-                  <text class="heritage-icon">⚖️</text>
+              <text class="featured-card-desc">{{ product.description }}</text>
+              <view class="card-actions">
+                <view class="add-to-cart-btn">
+                  <text class="cart-btn-text">加入购物车</text>
                 </view>
-                <text class="heritage-text">科学配比</text>
-                <text class="heritage-desc">传统配方现代化工艺</text>
-              </view>
-              <view class="heritage-item">
-                <view class="heritage-icon-box">
-                  <text class="heritage-icon">✨</text>
-                </view>
-                <text class="heritage-text">匠心制作</text>
-                <text class="heritage-desc">每一份都经过精心调制</text>
-              </view>
-              <view class="heritage-item">
-                <view class="heritage-icon-box">
-                  <text class="heritage-icon">🏆</text>
-                </view>
-                <text class="heritage-text">品质保证</text>
-                <text class="heritage-desc">严格质检安全无忧</text>
               </view>
             </view>
           </view>
@@ -145,31 +176,33 @@
         </view>
       </view>
 
-      <!-- 全部产品大图瀑布流 -->
+      <!-- 全部产品紧凑卡片 -->
       <view class="products-section">
-        <view class="section-header">
-          <text class="section-title">全部产品</text>
-          <view class="view-all" @tap="navigateToMenu">
-            <text class="view-all-text">查看全部</text>
-            <text class="arrow-icon">→</text>
+        <view class="section-title-bar">
+          <text class="section-main-title">热销产品</text>
+          <view class="title-more" @tap="navigateToMenu">
+            <text class="more-text">查看全部</text>
+            <text class="more-arrow">→</text>
           </view>
         </view>
         
-        <view class="products-grid">
+        <view class="products-compact-grid">
           <view 
-            class="product-large-item" 
-            v-for="(product, index) in allProducts" 
+            class="product-compact-item" 
+            v-for="(product, index) in allProducts.slice(0, 6)" 
             :key="index"
             @tap="viewProduct(product)"
           >
-            <view class="product-large-card">
-              <image :src="product.image" class="product-large-img" mode="aspectFill" />
-              <view class="product-large-info">
-                <text class="product-large-name">{{ product.name }}</text>
-                <view class="product-large-footer">
-                  <text class="product-large-price">¥{{ product.price }}</text>
-                  <view class="add-large-btn">
-                    <text class="add-symbol">+</text>
+            <view class="compact-card">
+              <image :src="product.image" class="compact-image" mode="aspectFill" />
+              <view class="compact-overlay">
+                <view class="compact-content">
+                  <text class="compact-name">{{ product.name }}</text>
+                  <view class="compact-footer">
+                    <text class="compact-price">¥{{ product.price }}</text>
+                    <view class="compact-add-btn">
+                      <text class="compact-add-text">购买</text>
+                    </view>
                   </view>
                 </view>
               </view>
@@ -187,27 +220,59 @@
 <script setup>
 import { ref } from 'vue'
 
-// 主视觉轮播大图
-const heroBanners = ref([
+// 产品轮播数据
+const featuredCarousel = ref([
   {
+    id: 1,
+    name: '新会陈皮红瓶',
+    description: '正宗新会陈皮，理气健脾',
+    price: 128,
     image: '/static/product/新会陈皮红瓶.jpg',
-    title: '新会陈皮',
-    subtitle: '百年传承工艺，药食同源精品'
+    badge: '人气王'
   },
   {
-    image: '/static/product/佛手老香黄300.jpg',
-    title: '佛手老香黄',
-    subtitle: '古法制作，开胃健脾良品'
+    id: 2,
+    name: '虎头蜂酒',
+    description: '珍贵滋补，强身健体',
+    price: 298,
+    image: '/static/product/虎头蜂酒.jpg',
+    badge: '限量版'
   },
   {
-    image: '/static/product/黄皮鼓500g.jpg',
-    title: '黄皮鼓',
-    subtitle: '清热解毒，生津止渴佳品'
+    id: 3,
+    name: '川贝老陈皮',
+    description: '止咳化痰，润肺清燥',
+    price: 138,
+    image: '/static/product/川贝老陈皮.jpg',
+    badge: '新品'
+  }
+])
+
+// 快速导航数据
+const quickNavs = ref([
+  {
+    title: '陈皮系列',
+    subtitle: '理气健脾',
+    image: '/static/product/新会陈皮黄瓶.jpg',
+    id: 'chenpi'
   },
   {
+    title: '佛手系列',
+    subtitle: '开胃消食',
+    image: '/static/product/佛手老香黄.jpg',
+    id: 'foshou'
+  },
+  {
+    title: '果脯蜜饯',
+    subtitle: '酸甜可口',
+    image: '/static/product/黄皮鼓.jpg',
+    id: 'guopu'
+  },
+  {
+    title: '药膳酒类',
+    subtitle: '滋补养生',
     image: '/static/product/桑葚酒.jpg',
-    title: '桑葚酒',
-    subtitle: '养血滋阴，润燥通便'
+    id: 'wine'
   }
 ])
 
@@ -547,102 +612,20 @@ const viewProduct = (product) => {
 </script>
 
 <style scoped>
-/* 现代大气首页设计 */
+/* 现代沉浸式首页设计 */
 .homepage {
   min-height: 100vh;
   background: var(--bg-primary);
 }
 
-/* 顶部导航 */
-.top-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-  backdrop-filter: blur(20rpx);
-  padding: 0 32rpx;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
-  box-shadow: 0 8rpx 32rpx rgba(212, 165, 116, 0.2);
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 88rpx;
-}
-
-.brand-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.brand-name {
-  font-size: 42rpx;
-  font-weight: 900;
-  color: #FFFFFF;
-  letter-spacing: 4rpx;
-  margin-bottom: 4rpx;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
-}
-
-.brand-subtitle {
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: 3rpx;
-  font-weight: 500;
-}
-
-.search-btn {
-  width: 64rpx;
-  height: 64rpx;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(10rpx);
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
-}
-
-.search-btn:active {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.search-icon {
-  font-size: 26rpx;
-  color: var(--bg-primary);
-}
-
-/* 主滚动区域 */
-.main-scroll {
-  padding-top: calc(88rpx + constant(safe-area-inset-top));
-  padding-top: calc(88rpx + env(safe-area-inset-top));
-  height: 100vh;
-  background: #ffffff;
-}
-
-/* 主视觉大图轮播 */
-.hero-section {
-  margin-bottom: 0;
-}
-
-.hero-swiper {
-  height: 600rpx;
-}
-
-.hero-slide {
+/* 沉浸式顶部大图区域 */
+.hero-banner {
   position: relative;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.hero-img {
+.hero-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -650,53 +633,422 @@ const viewProduct = (product) => {
 
 .hero-overlay {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-  padding: 60rpx 40rpx 40rpx;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  padding-bottom: 80rpx;
 }
 
+/* 顶部导航条 */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 32rpx;
+  z-index: 10;
+  min-height: 88rpx;
+}
+
+.brand-logo {
+  font-size: 42rpx;
+  font-weight: 900;
+  color: #FFFFFF;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 3rpx;
+}
+
+.nav-right {
+  display: flex;
+  gap: 20rpx;
+}
+
+.nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.nav-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-icon {
+  font-size: 32rpx;
+  color: #FFFFFF;
+}
+
+/* 主标题区域 */
 .hero-content {
-  color: white;
+  text-align: center;
+  color: #FFFFFF;
+  padding-bottom: 120rpx;
 }
 
-.hero-title {
-  font-size: 48rpx;
-  font-weight: 800;
-  margin-bottom: 16rpx;
+.hero-main-title {
+  font-size: 96rpx;
+  font-weight: 900;
+  color: #FFFFFF;
   display: block;
-  line-height: 1.2;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+  margin-bottom: 24rpx;
+  text-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 8rpx;
+  line-height: 1.1;
 }
 
 .hero-subtitle {
-  font-size: 30rpx;
-  opacity: 0.9;
-  margin-bottom: 40rpx;
-  display: block;
-  line-height: 1.4;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
-}
-
-.cta-button {
-  display: inline-block;
-  background: #ffffff;
-  color: #333333;
-  padding: 24rpx 48rpx;
-  border-radius: 40rpx;
+  font-size: 42rpx;
   font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  display: block;
+  margin-bottom: 20rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 4rpx;
+}
+
+.hero-description {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  margin-bottom: 60rpx;
+  line-height: 1.5;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+  max-width: 600rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 32rpx;
+  justify-content: center;
+  align-items: center;
+}
+
+.primary-btn {
+  background: var(--primary-color);
+  padding: 28rpx 56rpx;
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 8rpx 24rpx rgba(212, 165, 116, 0.4);
+}
+
+.primary-btn:active {
+  transform: translateY(2rpx) scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(212, 165, 116, 0.6);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  padding: 28rpx 56rpx;
+  border-radius: 50rpx;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
+}
+
+.secondary-btn:active {
+  transform: translateY(2rpx) scale(0.98);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 主滚动区域 */
+.main-scroll {
+  background: var(--bg-primary);
+  margin-top: -120rpx;
+  border-radius: 40rpx 40rpx 0 0;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -12rpx 32rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 产品轮播区域 */
+.product-carousel-section {
+  padding: 60rpx 0 40rpx;
+}
+
+.product-swiper {
+  height: 480rpx;
+  padding: 0 24rpx;
+}
+
+.carousel-slide {
+  position: relative;
+  border-radius: 32rpx;
+  overflow: hidden;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+  height: 100%;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 60rpx 32rpx 32rpx;
+  color: #FFFFFF;
+}
+
+.product-badge {
+  position: absolute;
+  top: -40rpx;
+  right: 20rpx;
+  background: var(--accent-color);
+  color: #FFFFFF;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(230, 126, 34, 0.4);
+}
+
+.product-carousel-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+  display: block;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+.product-carousel-desc {
+  font-size: 26rpx;
+  opacity: 0.9;
+  margin-bottom: 20rpx;
+  display: block;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+.product-carousel-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.price-symbol {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--heritage-gold);
+}
+
+.price-value {
+  font-size: 42rpx;
+  font-weight: 800;
+  color: var(--heritage-gold);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+/* 快速导航卡片 */
+.quick-nav-section {
+  padding: 40rpx 32rpx;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+}
+
+.nav-card {
+  background: var(--bg-card);
+  border-radius: 24rpx;
+  padding: 32rpx 24rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1rpx solid var(--border-light);
+}
+
+.nav-card:active {
+  transform: translateY(-4rpx) scale(0.98);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
+}
+
+.nav-image-container {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  margin: 0 auto 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.nav-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.nav-subtitle {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 精选推荐大卡片 */
+.featured-products-section {
+  padding: 40rpx 32rpx;
+}
+
+.section-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.section-main-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 2rpx;
+}
+
+.title-more {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  background: var(--bg-secondary);
+  border-radius: 20rpx;
   transition: all 0.2s ease;
-  box-shadow: 0 8rpx 20rpx rgba(255, 255, 255, 0.3);
 }
 
-.cta-button:active {
+.title-more:active {
   transform: scale(0.95);
-  background: #f5f5f5;
+  background: var(--bg-hover);
 }
 
-.cta-text {
-  font-size: 30rpx;
+.more-text {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.more-arrow {
+  font-size: 22rpx;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.featured-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+.featured-large-card {
+  background: var(--bg-card);
+  border-radius: 28rpx;
+  overflow: hidden;
+  box-shadow: 0 12rpx 36rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1rpx solid var(--border-light);
+}
+
+.featured-large-card:active {
+  transform: translateY(-6rpx);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+}
+
+.featured-card-image {
+  width: 100%;
+  height: 360rpx;
+  object-fit: cover;
+}
+
+.featured-card-content {
+  padding: 32rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.featured-card-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.featured-card-price {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: var(--accent-color);
+  margin-left: 16rpx;
+}
+
+.featured-card-desc {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24rpx;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-to-cart-btn {
+  background: var(--primary-color);
+  color: #FFFFFF;
+  padding: 20rpx 40rpx;
+  border-radius: 24rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 6rpx 18rpx rgba(212, 165, 116, 0.3);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(2rpx) scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(212, 165, 116, 0.4);
+}
+
+.cart-btn-text {
+  font-size: 26rpx;
+  font-weight: 600;
 }
 
 /* 现代文化区域 */
@@ -1030,119 +1382,102 @@ const viewProduct = (product) => {
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
 }
 
-/* 全部产品大图瀑布流 */
+/* 紧凑产品卡片网格 */
 .products-section {
-  padding: 60rpx 24rpx;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 40rpx 32rpx;
+  background: var(--bg-secondary);
 }
 
-.view-all {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  padding: 12rpx 24rpx;
-  background: #f5f5f5;
-  border-radius: 20rpx;
-  transition: all 0.2s ease;
-}
-
-.view-all:active {
-  transform: scale(0.95);
-  background: #f0f0f0;
-}
-
-.view-all-text {
-  font-size: 26rpx;
-  color: #666666;
-  font-weight: 500;
-}
-
-.arrow-icon {
-  font-size: 24rpx;
-  color: #999999;
-}
-
-.products-grid {
+.products-compact-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24rpx;
+  gap: 16rpx;
   margin-top: 32rpx;
 }
 
-.product-large-item {
+.product-compact-item {
   transition: transform 0.3s ease;
 }
 
-.product-large-item:active {
+.product-compact-item:active {
   transform: scale(0.98);
 }
 
-.product-large-card {
-  background: #ffffff;
-  border-radius: 24rpx;
+.compact-card {
+  position: relative;
+  border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  aspect-ratio: 1;
 }
 
-.product-large-card:hover {
-  transform: translateY(-6rpx);
-  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.16);
+.compact-card:hover {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.15);
 }
 
-.product-large-img {
+.compact-image {
   width: 100%;
-  height: 300rpx;
+  height: 100%;
   object-fit: cover;
 }
 
-.product-large-info {
-  padding: 24rpx;
+.compact-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 40rpx 20rpx 20rpx;
 }
 
-.product-large-name {
-  font-size: 28rpx;
+.compact-content {
+  color: #FFFFFF;
+}
+
+.compact-name {
+  font-size: 26rpx;
   font-weight: 600;
-  color: #333333;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
+  display: block;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
   line-height: 1.3;
-  height: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.product-large-footer {
+.compact-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.product-large-price {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: #ff6b35;
-}
-
-.add-large-btn {
-  width: 56rpx;
-  height: 56rpx;
-  background: #ff6b35;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.3);
-}
-
-.add-large-btn:active {
-  transform: scale(0.9);
-  background: #ff5722;
-}
-
-.add-symbol {
+.compact-price {
   font-size: 28rpx;
+  font-weight: 700;
+  color: var(--heritage-gold);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+.compact-add-btn {
+  background: var(--primary-color);
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  transition: all 0.2s ease;
+  box-shadow: 0 4rpx 12rpx rgba(212, 165, 116, 0.4);
+}
+
+.compact-add-btn:active {
+  transform: scale(0.95);
+  background: var(--primary-dark);
+}
+
+.compact-add-text {
+  font-size: 22rpx;
   font-weight: 600;
-  color: #ffffff;
-  line-height: 1;
+  color: #FFFFFF;
 }
 
 .safe-area-bottom {
