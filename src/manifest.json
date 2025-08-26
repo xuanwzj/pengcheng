@@ -1,0 +1,25 @@
+{
+    "name" : "戴宠光愈",
+    "appid" : "wx41427fba83315592",
+    "description" : "",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "mp-weixin" : {
+        "appid" : "wx41427fba83315592",
+        "setting" : {
+            "urlCheck" : false
+        },
+        "requiredPrivateInfos": ["getLocation", "onLocationChange"],
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "位置信息将用于寻找最近的设备"
+            }
+        },
+        "usingComponents" : true
+    },
+    "vueVersion" : "3"
+}
